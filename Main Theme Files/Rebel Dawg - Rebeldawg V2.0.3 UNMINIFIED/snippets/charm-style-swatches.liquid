@@ -1,0 +1,31 @@
+{%- comment -%}
+Product Customizer for Rebel Dawg (c)  -- Charm Style Swatches
+MIT License 
+
+Product Customizer allows the merchant to upload numerous swatch styles and assign the values via Section Settings while uploading to Shopify's CDN. 
+Made by MacroMade 2019
+
+
+NEED TO COMPLETE THE FUNCTION HERE.Will do when received charm styles for the call on Monday.
+
+{%- endcomment -%}
+
+{%- if section.settings.charm-style-swatches -%}
+{%- assign charmstyles = section.settings.charm-style-swatches  -%}
+{%- else -%}
+{%- assign charmstyles = 'star,heart,apple,circle,pear' -%}
+{%- endif -%}
+
+
+{%- assign styles = charmstyles | split: ","  -%}
+{%- for style in styles -%}
+{%- unless product.tags contains 'hide-small-{{ styles }}' -%}
+            <input type="radio" name="properties[Charm Style]" value="{{ style | capitalize }}" name="tag-group" id="{{ style | capitalize }}"> 
+  			<label for="{{ style | capitalize }}">{{ style | capitalize }}</label>
+{%- endunless -%}
+{%- endfor -%}
+
+
+
+
+     
