@@ -1,0 +1,371 @@
+
+<style> 
+  
+.carousel {
+  /*background: #EEE;*/
+}
+
+.carousel-cell {
+  width: 100%;
+  margin-right: 10px;
+ /* background: #8C8;*/
+  border-radius: 5px;
+  counter-increment: carousel-cell;
+}
+  
+  
+
+/* cell number */
+.carousel-cell:before {
+  display: none;
+  text-align: center;
+  content: counter(carousel-cell);
+  line-height: 200px;
+  font-size: 80px;
+  color: white;
+}
+  * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+ 
+
+</style>
+
+
+
+
+<!-- Flickity HTML init -->
+<div class="carousel" data-flickity='{ "wrapAround": true,"autoPlay": 2500 } '>
+  
+  {% for block in section.blocks %} 
+  
+ 
+  
+  <div class="carousel-cell">
+  
+  <div class="hero__container">
+    <style>
+.hero {
+  display: flex;
+  width: 100%;
+  position: relative;
+  height: {{block.settings.banner_height}};
+  background-size: cover;
+  background-repeat: no-repeat;
+  justify-content:center;
+    font-family: "acumin-pro-extra-condensed";
+}
+
+ .hero__inner {
+    align-items: center;
+    max-width: 80vw;
+    z-index: 2;
+    padding: 45px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: {{block.settings.vertical_text_alignment}};
+    color:{{block.settings.banner_text_color}};
+    width:{{block.settings.width_text_container}};
+  }
+
+.banner__heading {
+  line-height: 105px;
+  margin-bottom:0;
+  font-size: {{block.settings.heading_font_size}};
+  {% if block.settings.highlighted_text != blank  %}
+  line-height: .7;
+  {% endif %}
+}
+
+.highlighted__text {
+  {% if block.settings.heading_font_size == '4.32222rem' %}
+  padding-bottom: 12px;
+  {% endif %}
+
+  {% if block.settings.heading_font_size == '5.32222rem' %}
+  padding-bottom: 15px;
+  {% endif %}
+
+  {% if block.settings.heading_font_size == '6.92222rem' %}
+  padding-bottom: 19px;
+  {% endif %}
+
+  {% if block.settings.heading_font_size == '8.32222rem' %}
+  line-height: .78 !important;
+  padding-bottom: 20px;
+  {% endif %}
+}
+
+.banner_subheading{
+  color: {{block.settings.banner_text_color}};
+  font-size: {{block.settings.subheader_text_size}};
+  max-width: 350px
+}
+
+
+ </style>
+<div class="hero
+
+{% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %} box ratio-container lazyload js"
+     {% if block.settings.image %}
+     data-src="{{ blocks.settings.image }}"
+     data-sizes="auto"
+     data-parent-fit="cover"
+     data-widths="[540,720,900,1290,1512,1899,2000,2500]"
+     style="background-image: url({{ block.settings.image  | img_url:'master'}});"
+     {% endif %}>
+
+
+  {% if block.settings.image == blank %}
+    <div class="placeholder-background">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+
+  <div class="content hero__text__container">
+  <div class="hero__inner">
+    {% if block.settings.highlighted_text != blank %}
+      <span style="color:{{block.settings.banner_text_color}};" class="banner__heading highlighted__text mega-title">{{ block.settings.highlighted_text| escape }}</span>
+    {% endif %}
+      {% if block.settings.title != blank %}
+        <h2  style="color:{{block.settings.banner_text_color}};" class="banner__heading mega-title">{{ block.settings.title | escape }}</h2>
+      {% endif %}
+      {% if block.settings.subheader_text != blank %}
+        <div class="banner_subheading h4 sub__header">{{ block.settings.subheader_text }}</div>
+      {% endif %}
+      {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+        <a href="{{ block.settings.button_link }}" class="button hero__btn">
+          {{ block.settings.button_label | escape }}
+        </a>
+      {% endif %}
+  </div>
+</div>
+
+</div>
+</div>
+<noscript>
+  <div class="hero hero--{{ block.settings.hero_size }}{% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %}"{% if block.settings.image %} style="background-image: url('{{ block.settings.image | img_url: '2048x' }}');"{% endif %}></div>
+</noscript>
+
+  
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+{% schema %}
+{
+  "name": "Slider Section",
+	"max_blocks": 6,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Add Slide",
+      "settings": [
+       {
+     "type": "header",
+     "content": "|~~~ Image Settings ~~~|"
+        },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "select",
+        "id": "banner_height",
+        "label": "Banner/Image Height",
+        "default": "calc(75vh - 118px)",
+        "options": [
+          {
+            "value": "calc(100vh - 118px)",
+            "label": "100% - height takes Full Screen"
+          },
+          {
+            "value": "calc(80vh - 118px)",
+            "label": "80% of screen view"
+          },
+          {
+            "value": "calc(75vh - 118px)",
+            "label": "75% or 3/4 of screen height"
+          },
+          {
+            "value": "calc(70vh - 118px)",
+            "label": "70% of screen height"
+          },
+          {
+            "value": "calc(66vh - 118px)",
+            "label": "66% or 2/3 of screen"
+          },
+          {
+            "value": "calc(60vh - 118px)",
+            "label": "60% of screen height"
+          },
+          {
+            "value": "calc(50vh - 118px)",
+            "label": "50% of screen height or 1/2 of screen"
+          }
+        ]
+      },
+      {
+     "type": "header",
+     "content": "|~~~ Text Settings ~~~|"
+        },
+      {
+        "type": "text",
+        "id": "highlighted_text",
+        "label": "Heading w/ Pink Highlighted Text (1 word max)",
+        "default": "Mika "
+      },
+      {
+     "type": "header",
+     "content": "No text effect? Type header text on input BELOW"
+        },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Image with text overlay"
+      },
+      {
+        "type": "select",
+        "id": "heading_font_size",
+        "label": "Header Text Size",
+        "default": "6.92222rem",
+        "options": [
+          {
+            "label": "Small",
+            "value": "4.32222rem"
+          },
+          {
+            "label": "Medium",
+            "value": "5.32222rem"
+          },
+          {
+            "label": "Large",
+            "value": "6.92222rem"
+          },
+          {
+            "label": "Extra Large",
+            "value": "8.32222rem"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "subheader_text",
+        "label": "Sub Header Text",
+        "default": "Mika is the fashion queen sniff out her favs"
+      },
+      {
+        "type": "select",
+        "id": "subheader_text_size",
+        "label": " SubHeader Text size",
+        "default": "1.56667rem",
+        "options": [
+        {
+          "label": "Small",
+          "value": "1.26667rem"
+        },
+          {
+            "label": "Medium",
+            "value": "1.56667rem"
+          },
+          {
+            "label": "Large",
+            "value": "1.76667rem"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "banner_text_color",
+        "label": "Text color",
+        "default": "#ffffff"
+      },
+
+      {
+        "type": "select",
+        "id": "vertical_text_alignment",
+        "label": "Vertical Alignment of Text ",
+        "default": "center",
+        "options": [
+          {
+            "label": "Center",
+            "value": "center"
+          },
+          {
+            "label": "Top",
+            "value": "flex-start"
+          },
+          {
+            "label": "Bottom",
+            "value": "flex-end"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "width_text_container",
+        "label": "Width of Text Container (50% or 66% recommended)",
+        "default": "50%",
+        "options": [
+          {
+            "label": "50%",
+            "value": "50%"
+          },
+          {
+            "label": "66%",
+            "value": "66%"
+          },
+          {
+            "label": "75%",
+            "value": "75%"
+          },
+          {
+            "label": "100%",
+            "value": "100%"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button label"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slider",
+      "category": "Custom Areas",
+      "blocks": [
+        { 
+          "type": "select"
+        },
+        {
+          "type": "select"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,333 @@
+<div class="rebel__container">
+  
+
+  <div class="grid grid--large grid--center rebel__feature">
+    
+    {%comment%}Image side{%endcomment%}
+    <div class="grid__cell {{section.settings.image_size}}--lap-and-up rebel__half--1" style="float:{{section.settings.image_position}}">
+      <img
+           class="rebel__img lazyload"
+           src="{{ section.settings.image | img_url: '900x900'  | split: '?' | first }}"
+           data-src="{{ img_url }}"
+           data-widths="[ 360, 450, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+           data-sizes="cover"
+           alt="{{ section.settings.image.alt | escape }}">
+    </div>
+
+
+    {%comment%}Text side{%endcomment%}
+    <div class="grid__cell  {{section.settings.text_size_width}}--lap-and-up rebel__half--2"
+         style="background-color:{{section.settings.card_background_color}}">
+
+      <div class="rebel__inner">
+        {% if section.settings.highlighted_text != blank %}
+        <span style="align-self:{{section.settings.heading_alignment}};background-color: {{ section.settings.heading_background_color }};" class="h1 rebel__features__heading highlighted__text mega-title">{{ section.settings.highlighted_text| escape }}</span>
+        {% endif %}
+        {% if section.settings.title != blank %}
+        <h2 id="rebel-title" class="h1 rebel__card__header {% if section.settings.text_size == 'large' %} mega-title--large{% endif %}"
+            style="align-self:{{section.settings.heading_alignment}}">{{ section.settings.title | escape }}</h2>
+        {% endif %}
+        {% if section.settings.subheading_text != blank %}
+        <h4 class="rebel__feature h4 sub__header tablet"
+            style="align-self:{{section.settings.heading_alignment}}">{{ section.settings.subheading_text }}</h4>
+        {% endif %}
+        {% if section.settings.text != blank %}
+        <div class="rebel__subtitle"
+             style="text-align:{{section.settings.text_alignment}}">{{ section.settings.text }}</div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="button hero__btn" aria-label="Hero Button" aria-labelledby="rebel-title" role="button" style="align-self:{{section.settings.button_alignment}}">
+          {{ section.settings.button_label | escape }}
+        </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<noscript>
+  <div class="hero hero--{{ section.settings.hero_size }}{% if section.settings.title != blank or section.settings.text != blank or section.settings.button_label != blank %} hero__overlay{% endif %}"{% if section.settings.image %} style="background-image: url('{{ section.settings.image | img_url: '2048x' }}'); background-position: center {{ section.settings.alignment }};"{% endif %}></div>
+</noscript>
+
+
+<style>
+
+    .rebel__img:before {
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: {{section.settings.aspect_ratio }}%;
+    }
+
+    .rebel__inner{
+      flex-direction: column;
+      justify-content: {{section.settings.vertical_text_alignment}};
+      {% if section.settings.vertical_text_alignment == 'flex-start' %}
+        margin-top: 50px;
+      {% endif %}
+      {% if section.settings.vertical_text_alignment == 'flex-end' %}
+        margin-bottom: 50px;
+      {% endif %}
+    }
+
+
+    .rebel__features__heading {
+      padding: 10px;
+      padding-top: 3px;
+      background-color: {{section.settings.card_background_color}};
+      margin-bottom:0;
+    }
+
+
+  @media (min-width:800px) and (max-width:1000px) {
+    {% if section.settings.text_size_width == '1/3'%}
+    .rebel__card__header{
+      margin-bottom: 0;
+    }
+    .rebel__feature.sub__header.tablet {
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .rebel__subtitle {
+      font-size: 0.89999rem;
+    }
+    .rebel__inner .hero__btn {
+      padding: 10px 40px;
+      font-size: 0.89999rem;
+    }
+    div.rebel__inner{
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  {% endif %}
+  }
+
+
+  </style>
+
+{% schema %}
+  {
+    "name": "Rebel Features",
+    "class": "index-section",
+    "settings": [
+    {
+   "type": "header",
+   "content": "|~~~ Overall Settings ~~~|"
+      },
+
+      {
+        "type": "select",
+        "id": "image_size",
+        "label": "Choose Image Size Card Width",
+        "default": "1/2",
+        "options": [
+          {
+            "value": "1/2",
+            "label": "1/2 "
+          },
+          {
+            "value": "1/3",
+            "label": "1/3 "
+          },
+          {
+            "value": "2/3",
+            "label": "2/3"
+          }
+        ],
+        "info": "Example: 1/2 is chosen the text size width option below has to be 1/2 also. Or if image size is 2/3. The text width option must be 1/3"
+      },
+      {
+        "type": "select",
+        "id": "text_size_width",
+        "label": "Choose Text Size Card Width",
+        "default": "1/2",
+        "options": [
+          {
+            "value": "1/2",
+            "label": "1/2 "
+          },
+          {
+            "value": "1/3",
+            "label": "1/3 "
+          },
+          {
+            "value": "2/3",
+            "label": "2/3"
+          }
+        ]
+      },
+
+
+
+          {
+         "type": "header",
+         "content": "|~~~ Image Area Settings ~~~|"
+       },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "select",
+        "id": "image_position",
+        "label": "Choose Image Position",
+        "default": "right",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left Side "
+          },
+          {
+            "value": "right",
+            "label": "Right Side"
+          }
+        ]
+      },
+
+         {
+        "type": "header",
+        "content": "|~~~ Text Card Area Settings ~~~|"
+      },
+      {
+        "type": "select",
+        "id": "vertical_text_alignment",
+        "label": "Vertical Alignment of Text ",
+        "default": "center",
+        "options": [
+          {
+            "label": "Center",
+            "value": "center"
+          },
+          {
+            "label": "Top",
+            "value": "flex-start"
+          },
+          {
+            "label": "Bottom",
+            "value": "flex-end"
+          }
+        ]
+      },
+      {
+         "type": "color",
+         "id": "card_background_color",
+         "label": "Text Area Background Color",
+         "default": "rgba(0,0,0,0)"
+       },
+       {
+         "type": "text",
+         "id": "highlighted_text",
+         "label": "Heading w/ Pink Highlighted Text (1 word max)",
+         "default": "Mika "
+       },
+       {
+          "type": "color",
+          "id": "heading_background_color",
+          "label": "Heading Background Color",
+          "default": "rgba(0,0,0,0)"
+        },
+         {
+        "type": "header",
+        "content": "No text effect?Type ALL header text on input BELOW"
+           },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Rebel Features"
+      },
+
+      {
+        "type": "text",
+        "id": "subheading_text",
+        "label": "Sub Heading Text",
+        "default": "This week's doggo of the week "
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Choose text alignment for Header and Subheader",
+        "default": "flex-start",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-start",
+            "label": "Left"
+          },
+          {
+            "value": "flex-end",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Choose alignment for text",
+        "default": "-webkit-left",
+        "options": [
+          {
+            "value": "-webkit-center",
+            "label": "Center"
+          },
+          {
+            "value": "-webkit-left",
+            "label": "Left"
+          },
+          {
+            "value": "-webkit-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.</p>"
+      },
+      {
+        "type": "select",
+        "id": "button_alignment",
+        "label": "Choose alignment for Button",
+        "default": "flex-start",
+        "options": [
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-start",
+            "label": "Left"
+          },
+          {
+            "value": "flex-end",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button Copy"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Rebel Features",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}

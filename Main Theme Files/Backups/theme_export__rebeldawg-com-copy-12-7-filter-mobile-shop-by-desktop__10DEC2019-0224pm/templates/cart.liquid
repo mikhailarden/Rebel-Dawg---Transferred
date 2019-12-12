@@ -1,0 +1,40 @@
+{%- include 'bold-cart' -%}
+{%- assign force_secondary_background = true -%}
+
+{%- section 'cart-template' -%}
+{%- section 'cart-recommended-products' -%}
+
+<script>
+const enlargeFontSwatch = () => {
+  let capitalizedFont = $(".cart-item__variant-option.personalized:contains('Font')").children().children();
+   let lowerCaseFont = $(".hulkapps_option_name:contains('font')").children().children();
+   let sisterFont = capitalizedFont.parent();
+    if(capitalizedFont || lowerCaseFont) {
+      capitalizedFont.addClass('font__swatch').css({
+      "width": "125px",
+      "height": "47px",
+      "border-radius": "0",
+      "border": "3px solid #000000",
+      "margin": "10px"
+      });
+
+      sisterFont.css("color", "#ffffff");
+      lowerCaseFont.addClass('font__swatch').css({
+      "width": "125px",
+      "height": "47px",
+      "border-radius": "0",
+      "padding": "40px 0 0 0",
+      "border": "3px solid #000000",
+      "margin": "10px"
+      });
+
+  } else {
+       console.log('no font style in this product')
+    }
+}
+
+$(document).ready(function() {
+  enlargeFontSwatch();
+});
+
+</script>

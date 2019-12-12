@@ -1,0 +1,104 @@
+<div class="form__control">
+  
+  <!-- Color Swatch Selector --->
+            <ul class="product__available-colors list--unstyled" data-selector-type="color">
+          <label for="single-option-selector-{{ forloop.index0 }}" class="form__label">{{ option.name }} <span class="swatch__color__name">  </span></label>
+
+          {%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' -%}
+          {%- assign size_label = 'size,taille,bröße,tamanho,tamaño,koko,サイズ' -%}
+
+          {%- assign downcase_option = option.name | downcase -%}
+
+          {%- if section.settings.show_color_swatch and color_label contains downcase_option -%}
+
+
+          {%- assign optName = 'options' | append: forloop.index -%}
+          {%- assign option_values = [optName] | default: option.values -%}
+          {%- for value in option_values -%}
+              {%- include 'variant-option-properties', value: value -%}
+
+              {%- assign downcase_value = value | downcase -%}
+              {%- assign color_swatch_white = false -%}
+
+              {%- if 'white,blanc,blanco,白,weiß,vit,branco' contains downcase_value -%}
+              {%- assign color_swatch_white = true -%}
+              {%- endif -%}
+
+
+                <li class="product__color {% unless allow_variant_selection %}product__color--unavailable{% endunless %}" title="{{ value }}">
+                  <input id="{{ product.id }}-color-swatch-{{ forloop.index0 }}" {% unless allow_variant_selection %}disabled{% endunless %} class="single-option-selector" name="single-option-selector-{{ forloop.parentloop.index0 }}" data-option-index="option{{ forloop.parentloop.index }}" type="radio" value="{{ value | escape }}">
+                  <label aria-label="{{value}}" {% if allow_variant_selection %}tabindex="0"{% endif %} class="color-swatch {% if color_swatch_white %}color-swatch--white{% endif %}" for="{{ product.id }}-color-swatch-{{ forloop.index0 }}" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.png' | asset_url }})"></label>
+                  {%- include 'icon' with 'tick' -%}
+                </li>
+              {%- endfor -%}
+
+            </ul>
+  
+  
+  <!--- End Color Swatch Selector --->
+  
+  
+  
+          {%- elsif section.settings.show_size_swatch and size_label contains downcase_option -%}
+  
+  
+    
+  
+  
+  
+          <ul class="product__available-sizes list--unstyled" data-selector-type="size">
+            {%- assign optName = 'options' | append: forloop.index -%}
+            {%- assign option_values = [optName] | default: option.values -%}
+            {%- for value in option_values -%}
+                {%- include 'variant-option-properties', value: value -%}
+
+                <li class="product__size {% unless allow_variant_selection %}product__size--unavailable{% endunless %}">
+                  <input id="{{ product.id }}-{{ downcase_option | escape }}-{{ forloop.index0 }}"  {% unless allow_variant_selection %}disabled{% endunless %} type="radio" class="single-option-selector"   name="single-option-selector-{{ forloop.parentloop.index0 }}" data-option-index="option{{ forloop.parentloop.index }}"  value="{{ value | escape }}">
+                  <label {% if allow_variant_selection %}tabindex="0"{% endif %} for="{{ product.id }}-{{ downcase_option | escape }}-{{ forloop.index0 }}" aria-label="{{value}}" class="product__size-label">{{ value }}</label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+  
+  {%- for product_option in product.options_with_values -%}
+   {%- if product_option.name == "Shape" -%}
+  
+
+  
+  <style>
+     .stepnumber1, .single-option-selector, .styled-select {
+  display:none!important;
+  }
+    
+    
+  </style>
+  
+  
+    <ul class="product__available-colors list--unstyled" data-selector-type="shape">
+         
+          {%- assign shape_label = 'shape' -%}
+          {%- assign downcase_option = option.name | downcase -%}
+          
+          {%- assign optName = 'options' | append: forloop.index -%}
+          {%- assign option_values = [optName] | default: option.values -%}
+          {%- for value in option_values -%}
+              {%- include 'variant-option-properties', value: value -%}
+
+              {%- assign downcase_value = value | downcase -%}
+
+                <li class="product__color {% unless allow_variant_selection %}product__color--unavailable{% endunless %}" title="{{ value }}">
+                  <input id="{{ product.id }}-color-swatch-{{ forloop.index0 }}" {% unless allow_variant_selection %}disabled{% endunless %} class="single-option-selector" name="single-option-selector-{{ forloop.parentloop.index0 }}" data-option-index="option{{ forloop.parentloop.index }}" type="radio" value="{{ value | escape }}">
+                  <label aria-label="{{value}}" {% if allow_variant_selection %}tabindex="0"{% endif %} class="color-swatch {% if color_swatch_white %}color-swatch--white{% endif %}" for="{{ product.id }}-color-swatch-{{ forloop.index0 }}" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.png' | asset_url }})"></label>
+                 
+                </li>
+              {%- endfor -%}
+
+            </ul>
+  
+  {%- endif -%}
+  {%- endfor -%}
+
+
+          {%- endif -%}
+    </div>
+

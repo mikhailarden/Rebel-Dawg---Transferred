@@ -1,0 +1,129 @@
+<script>
+
+  $(function() {
+    $('.container .flex-container').slick({
+      slidesToShow: 2,
+      slidesToScroll: 1,
+      arrows: false,
+      autoplay: true,
+      mobileFirst: true,
+      autoplaySpeed: 2000,
+      responsive: [
+        {
+          breakpoint: 796,
+          settings: "unslick"
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+
+      ]
+    });
+  });
+
+
+
+
+</script>
+
+{% for block in section.blocks %}
+{% assign count = forloop.length %} 
+{% endfor %}
+<div class="container">
+  <div class="flex-container" style="color:{{section.settings.bgcolor}};">  
+    {% for block in section.blocks %}
+    <div class="flex-block">
+      <img alt="{% if block.settings.text != blank %} {{block.settings.text}} {% else %} Rebel Dawg ID Tags {%endif %}" src="{{block.settings.logo | img_url:'800x'}}">
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  @media (min-width:796px) {
+    .flex-container {
+      display:flex;
+    }
+    .flex-block {
+      width: calc(100% / {{count}});
+      padding:20px;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  @media (max-width:796px) {
+    .flex-container {
+      flex-wrap:wrap;
+      display:flex;
+    }
+    .flex-block {
+      width: calc(100% / {{count | divided_by: 2}});
+      padding:20px;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  }
+</style>
+
+
+{% schema %}
+{
+"name": "Logo Blocks",
+"max_blocks": 6,
+"settings": [
+{
+"id": "bgcolor",
+"type": "color",
+"label": "Logo Block Color Background"
+}
+],
+"blocks": [
+{
+"type": "select",
+"name": "Add Logo",
+"settings": [
+{
+"id": "logo",
+"type": "image_picker",
+"label": "Logo Block"
+},
+{
+"id": "text",
+"type": "text",
+"label": "Logo Alt Text (SEO Benefits)",
+"default": "Rebel Dawg ID Tags"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Logo Blocks",
+"category": "Custom",
+"blocks": [
+{ 
+"type": "select"
+},
+{
+"type": "select"
+}
+]
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,126 @@
+<style>
+  
+  
+  
+  @media (min-width:990px) {
+  
+    .product-features__list{
+        display: flex;
+    flex-direction: column;
+    }
+    
+    .product-features__item {
+    width:100%;
+    }
+    
+    .pt-mobile-header {
+    display:none;
+    }
+    
+    .mobile-only.features {
+  display:block!important;
+  }
+    
+  }
+    
+    @media (max-width:990px) {
+      .mobile-only.features {
+  display:none;
+  }
+  
+      
+      .product-features {
+    position:relative!important;
+        top:0px!important;
+    }
+    }
+    
+    
+    
+   
+</style>
+
+
+{%- comment -%}
+Trademark integrates with SuperFields app in order to specify unique features per product, instead of relying on global features defined in the theme settings.
+The logic is that if there are at least one feature set through the unique features, we use those, otherwise we fallback to the global features.
+{%- endcomment -%}
+
+{%- assign has_unique_features = false -%}
+
+{%- for i in (1..6) -%}
+  {%- assign metafield_option = 'feature_' | append: i | append: '_enabled' -%}
+
+  {%- if product.metafields.sf_product_features[metafield_option] == 1 -%}
+    {%- assign has_unique_features = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if has_unique_features or section.blocks.size > 0 -%}
+  <section class="product-features">
+    <div class="container">
+      <div class="product-features__list grid grid--huge">
+        {%- if has_unique_features -%}
+          {%- for i in (1..6) -%}
+            {%- assign metafield_show_option = 'feature_' | append: i | append: '_enabled' -%}
+            {%- assign metafield_icon_option = 'feature_' | append: i | append: '_icon' -%}
+            {%- assign metafield_title_option = 'feature_' | append: i | append: '_title' -%}
+            {%- assign metafield_content_option = 'feature_' | append: i | append: '_content' -%}
+
+            {%- if product.metafields.sf_product_features[metafield_show_option] == 1 -%}
+              <div class="product-features__item grid__cell 1/3--handheld-and-up">
+
+
+
+                {%- if product.metafields.sf_product_features[metafield_icon_option] != blank -%}
+                  <i class="product-features__icon fa fa-{{ product.metafields.sf_product_features[metafield_icon_option] }}"></i>
+                {%- endif -%}
+
+                {%- if product.metafields.sf_product_features[metafield_title_option] != blank -%}
+                  <h3 class="product-features__title h3 feature__title text--uppercase">{{ product.metafields.sf_product_features[metafield_title_option] }}</h3>
+                {%- endif -%}
+
+                {%- if product.metafields.sf_product_features[metafield_content_option] != blank -%}
+                  <p class="product-features__content text--respect-break">{{ product.metafields.sf_product_features[metafield_content_option] | strip_html }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+        
+        <style>
+          {% unless collection.products_count  >= 9 %}
+          
+          .sidebarblock-4,.sidebarblock-5,.sidebarblock-6 {
+          display:none!important;
+          }
+          
+          {% endunless %}
+        </style>
+        
+          {%- for block in section.blocks -%}
+            <div class="product-features__item grid__cell 1/3--handheld-and-up sidebarblock-{{forloop.index}}" {{ block.shopify_attributes }}>
+              {%- if block.settings.image!= blank -%}
+                <img src="{{ block.settings.image | img_url:'125x125' | split: '?' | first}}" class="product-features__icon rebel__icon" alt="{{product.vendor}} | {{product.title}}">
+              {%- endif -%}
+
+              {%- if block.settings.title != blank -%}
+                <h3 class="product-features__title h3 feature__title text--uppercase">{{ block.settings.title }}</h3>
+              {%- endif -%}
+
+              {%- if block.settings.content != blank -%}
+                <p class="product-features__content text--respect-break">{{ block.settings.content | strip_html }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+
+
+{%- endif -%}
+
+

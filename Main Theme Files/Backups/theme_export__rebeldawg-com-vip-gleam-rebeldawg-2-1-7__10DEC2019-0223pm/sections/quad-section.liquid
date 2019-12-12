@@ -1,0 +1,148 @@
+<section class="quad-section {{section.id}}" style="background-color:{{bgcolor}};">
+
+  {% for block in section.blocks %}
+  {% assign count = forloop.length %} 
+  {% endfor %}
+  
+  {% for block in section.blocks %}
+  <div class="quad-item" style="background-image: url({{block.settings.img | img_url:'master'}})">
+    <div class="image-text">
+      <h2 class="section__title h3">{{block.settings.heading}}</h2>
+      <a href="{{block.settings.link}}" class="button hero__btn"> {{block.settings.btntext}}</a>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+
+<style>
+
+  .image-text * {
+  margin:0px;
+  }
+  
+  .quad-item {
+    height: {{section.settings.size}};
+  }
+
+  .quad-item {
+    /*height:100%; */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 100px;
+  }
+
+  @media (max-width:796px) {
+
+    .quad-section {
+      display:flex;
+      flex-direction:column;
+    }
+
+    .quad-item {
+      width: 100%;
+    }
+
+  }
+
+  @media (min-width:796px) {
+    .quad-section {
+      display:flex;
+          flex-wrap: wrap;
+
+    }
+
+    .quad-item {
+      width: 50%;
+    }
+  }
+
+</style>
+
+
+
+{% schema %}
+{
+  "name": "Quad Section",
+	"max_blocks": 4,
+  "settings": [
+    {
+      "id": "bgcolor",
+      "type": "color",
+      "label": "Logo Block Color Background"
+    },
+{
+   "type":      "select",
+   "id":        "size",
+   "label":     "Section Size",
+   "options": [
+	{
+       "value": "25vh",
+       "label": "1/4 (25%)"
+     },
+     {
+       "value": "50vh",
+       "label": "Half (50%)"
+     },
+	{
+       "value": "75vh",
+       "label": "3/4 (75%)"
+     },
+     {
+       "value": "100vh",
+       "label": "Full (100%)"
+     }
+   ],
+   "default":   "50vh",
+   "info":      "Use this to set the size of the area"
+}
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Add Section",
+      "settings": [
+        {
+          "id": "img",
+          "type": "image_picker",
+       		"label": "Background Image Block"
+        },
+		{
+          "id": "heading",
+          "type": "text",
+          "label": "Title Heading",
+          "default": "Rebel Dawg"
+        },
+		{
+          "id": "btntext",
+          "type": "text",
+          "label": "Button Text",
+          "default": "Button"
+        },
+		{
+          "id": "link",
+          "type": "url",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quad Section",
+      "category": "Custom",
+      "blocks": [
+        { 
+          "type": "select"
+        },
+        {
+          "type": "select"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

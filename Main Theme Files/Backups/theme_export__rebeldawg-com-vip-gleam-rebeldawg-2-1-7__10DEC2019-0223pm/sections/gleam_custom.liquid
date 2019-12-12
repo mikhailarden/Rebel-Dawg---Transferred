@@ -1,0 +1,50 @@
+  <script type="text/javascript">(function(d, t){
+if(window.location.hash!='#gleam'&&(''+document.cookie).match(/(^|;)\s*Gleam9IJgo=X($|;)/)){return;}
+
+var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+g.src = "https://widget.gleamjs.io/9IJgo/ol.js"; s.parentNode.insertBefore(g, s);
+}(document, "script"));</script>
+
+<script defer> 
+$(function() {
+  var cookie_check = Cookies.get('gleam_checker');
+  var hash = location.hash;
+  
+  if (cookie_check == 'true') {
+  // If the cookie exists we do not show the function to include the gleam popup. 
+  } else {
+    // If the cookie DOES NOT exist, we need to check the homepage URL for the hash. If no hash, we will reload the page. 
+  
+    if (hash == '#gleam') {
+    // If gleam hash exists we need to set the cookie so that this does not re-appear for the next X days. 
+      Cookies.set('gleam_checker', 'true', { expires: {{section.settings.text-box}} })
+    } else {
+    // If the gleam has does NOT exist we need to reload the page so that it includes the hash.
+      $(location).attr('href', 'https://rebeldawg.com/#gleam');
+    }
+  }
+  
+  
+});
+</script>
+
+{% schema %}
+{
+  "name": "Gleam Function",
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Gleam Popup Expiration",
+      "default": "3",
+	  "info":"Sets the expiration time for the popup, needs to be a number"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gleam Popup",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

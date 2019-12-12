@@ -1,0 +1,166 @@
+<section class="section section-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank -%}
+      <h2 class="section__title h3">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <div class="grid grid--large grid--center card__collection__container" data-slides-count="{{ section.blocks.size }}">
+      {%- assign grid_items_per_row = section.settings.grid_items_per_row -%}
+
+
+      {%- for block in section.blocks -%}
+        {%- capture current -%}{%- cycle 1, 2, 3, 4, 5, 6 -%}{%- endcapture -%}
+
+        {%- assign collection = collections[block.settings.collection] -%}
+          {%- assign card_image = block.settings.card_image -%}
+            {%- assign card_url = block.settings.card_url -%}
+            {%- assign card_text = block.settings.card_text -%}
+            {%- assign card_button_text = block.settings.card_button_text -%}
+          {%- assign card_title = block.settings.card_title -%}
+
+          <div class="grid__cell 1/2--handheld-and-up 1/{{ grid_items_per_row}}--desk" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+              {% if card_image == blank %}
+                <a href="{{card_url}}" class="collection-item placeholder__img" style="background-image: url('https://cdn.shopify.com/s/files/1/0018/8910/8026/files/30171612_363244144161750_1876126719706210175_o.jpg?3867481490518435343')">
+
+              {% else %}
+
+            <a href="{{card_url}}" class="collection-item" style="">
+              <div class="collection-item"
+                   data-optimumx="1.4">
+                {% include 'alt-collection-image' %}
+
+              </div>
+
+              <noscript>
+                <div class="collection-item__background-image" style="background-image: url({{ card_image | img_url: '800x' }})"></div>
+              </noscript>
+
+              {% endif %}
+
+              <div class="collection-item__info">
+                <h3 class="collection-item__title h3 collection_sub__header" id="card__title"> {{ card_title }}</h3>
+
+                <div class="collection-item__bottom">
+                  {%- if card_text != blank -%}
+                    <p class="collection-item__description">{{ card_text | strip_html | truncate: 100 }}</p>
+                  {%- endif -%}
+
+                  {% if card_button_text != blank  %}
+                  <button class="collection-item__button button" aria-labelledby="card__title" aria-label="Collection card button">{{ card_button_text }}</button>
+
+
+                  {% else %}
+                    <a class="collection-item__button button" href="{{card_url}}">{{ 'collections.general.see_more' | t: collection_title: collection.title }}</a>
+                  {% endif%}
+                </div>
+              </div>
+            </a>
+
+          </div>
+          {% comment %}
+        <!-- {%- else -%}
+          <div class="grid__cell 1/2--handheld-and-up 1/{{ grid_items_per_row }}--desk" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+            <a class="collection-item">
+              <div class="collection-item__placeholder">
+                {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+
+              <div class="collection-item__info">
+                <h3 class="collection-item__title h4">{{ 'home_page.onboarding.collection_title' | t }}</h3>
+
+                <div class="collection-item__bottom">
+                    <p class="collection-item__description">{{ 'home_page.onboarding.collection_description' | t }}</p>
+
+                  <button class="collection-item__button button">{{ 'home_page.onboarding.collection_see_more' | t }}</button>
+                </div>
+              </div>
+            </a>
+          </div> -->
+          {% endcomment %}
+
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Card list",
+  "class": "shopify-section__collection-list",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Collection list with alternate image"
+    },
+    {
+      "type": "range",
+      "id": "grid_items_per_row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Collections per row (desktop)",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "Card Image "
+        },
+        {
+        "id": "card_url",
+        "type": "url",
+        "label": "URL you want Card & Button to lead to ex. Collection"
+      },
+      {
+        "type":      "text",
+        "id":        "card_title",
+        "label":     "Can be title of your collection or something else ",
+        "default":   "ID Tags",
+        "info":      "Example: Personal Pupper "
+      },
+      {
+        "type":      "text",
+        "id":        "card_text",
+        "label":     "Short sentence describing your collection or img",
+        "default":   "ID tags to make your dawgie extra",
+        "info":      "Example: Make your dawgies extra"
+      },
+      {
+        "type":      "text",
+        "id":        "card_button_text",
+        "label":     "Button Copy Keep to 2-4 words Max",
+        "default":   "Take A Look",
+        "info":      "Example: Shop Now"
+      }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Collection",
+      "name": "Rebel Collection Card List",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

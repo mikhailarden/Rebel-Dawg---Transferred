@@ -1,0 +1,297 @@
+{% if template contains 'product' %}
+{% if product.metafields.customify['cstmfy_req'] == '1' %}
+{% if pplr_load_once != true %}
+{% assign pplr_load_once = true %}
+<script type='text/javascript'>
+  if (typeof product_personalizer == 'undefined') {
+  var product_personalizer = {{product.metafields.customify | json}};
+  }
+  if (typeof pplr_product == 'undefined') {
+  var pplr_product = {%- include 'bold-product', output: 'json' -%};
+  }
+  if (typeof pplr_money_formate == 'undefined') {
+  var pplr_money_formate = {{ shop.money_format | json }};
+  }
+
+
+  //  passing the sizing selection down to the product personalizer size selection
+  // because the  select the app brings out of the box is meh
+(function($) {
+  $.fn.sizeSelector = function (e) {
+        console.log(' size function running');
+
+// grabbing tag  product data from shopify
+    var productInfo = {
+      {% for t in product.tags %}
+       {% if t contains "size:" %}
+      {% assign tag = t | split: 'size:' | last %}
+        {{ tag | split: '-' | join:':' }},
+        {% endif %}
+     {% endfor %}
+    };
+
+    // var personalized = {
+    //   {% for tag in product.tags %}
+    //    {% if tag contains "personalized" %}
+    //      {{ tag }}
+    //     {% endif %}
+    //  {% endfor %}
+    // }
+
+
+
+
+    var tagSize = Object.keys(productInfo);
+
+        console.log(productInfo);
+        console.log(Object.keys(productInfo));
+        console.log(Object.values(productInfo));
+        console.log(Object.entries(productInfo));
+
+        var productSize = "";
+        var maxLength = "";
+      var loadingSize = $(".single-option-selector").val().toLowerCase();//Remember to put this back to lowercase afer
+
+
+
+        const loadingSizea = (data) => {
+          Object.entries(data).forEach(([key, value]) => {
+            productSize = key;
+            maxLength = value;
+
+            if (productSize === loadingSize) {
+                      console.log(productSize, 'from function', maxLength);
+                  return productSize, maxLength;
+            }
+          });
+
+        }
+
+
+
+
+
+       // var hiddenLoadingSize =  $(".pplraddprice.cstmfy_c_required:selected").val();
+
+
+
+
+       $(document).ready(function() {
+
+           var hiddenSize = document.getElementsByClassName('pplraddprice.cstmfy_c_required');
+           var input = $(".pplr_text.pplr_monogram.cstmfy_c_required");
+            loadingSizea(productInfo);
+
+               input.attr('maxlength', maxLength);
+             input.after("<span class='rd-text-left' style='color:red;'>  WOOF! " +maxLength+" characters left </span>")
+                     .on('focus', function() {
+                     $(this).addClass('active');
+                      input.keypress(function (e) {
+                          var characterLength = $(this).val().length;
+                          var textRemaining = maxLength - characterLength - 1;
+                             $('input.pplr_text.pplr_monogram.cstmfy_c_required.active').next()
+                              .replaceWith("<span class='rd-text-left' style='color:red;'> WOOF! "+ textRemaining +" characters left </span>");
+
+                       if (characterLength >= maxLength) {
+                      $('input.pplr_text.pplr_monogram.cstmfy_c_required.active').next()
+                      .replaceWith("<span class='rd-text-left' style='color:red;'> WOOF! You've reached the max amount of characters that fit in the tag! </span>")
+                      }
+
+                         $(this).focusout(function () {
+                             $(this).removeClass('active');   // remove active class once mouse leaves input
+                         })
+
+                       });
+                     });
+
+       });
+
+
+
+// $(document).ready(function() {
+//
+//     var hiddenSize = document.getElementsByClassName('pplraddprice.cstmfy_c_required');
+//     var input = $(".pplr_text.pplr_monogram.cstmfy_c_required");
+//
+//     Object.entries(productInfo).forEach(([key, value]) => {
+//       productSize = key;
+//       maxLength = value;
+//
+//       if (loadingSize === productSize) {
+//         input.attr('maxlength', maxLength);
+//       input.after("<span class='rd-text-left' style='color:red;'>  WOOF! " +maxLength+" characters left </span>")
+//
+//
+//               .on('focus', function() {
+//               $(this).addClass('active');
+//                   input.keypress(function (e) {
+//                    var characterLength = $(this).val().length;
+//                    var textRemaining = maxLength - characterLength - 1;
+//                         $('input.pplr_text.pplr_monogram.cstmfy_c_required.active').next()
+//                           .replaceWith("<span class='rd-text-left' style='color:red;'> WOOF! "+ textRemaining +" characters left </span>");
+//
+//                 if (characterLength >= maxLength) {
+//                $('input.pplr_text.pplr_monogram.cstmfy_c_required.active').next()
+//                .replaceWith("<span class='rd-text-left' style='color:red;'> WOOF! You've reached the max amount of characters that fit in the tag! </span>")
+//                }
+//
+//                   $(this).focusout(function () {
+//                       $(this).removeClass('active');   // remove active class once mouse leaves input
+//                   })
+//
+//
+//                 });
+//               });
+//             }
+//     });
+// });
+
+
+
+// $("button.btn.pplr-c-button.pplr-btn.button.ptc_button").on("click", function(e) {
+//   var hiddenLoadingSize =  $(".pplraddprice.cstmfy_c_required:selected").val();
+//   console.log('the hidden loaded size is'+ hiddenLoadingSize);
+// });
+   // var input = $(".pplr_text.pplr_monogram.cstmfy_c_required");
+   //
+   //
+      // Object.entries(productInfo).forEach(([key, value]) => {
+      //   productSize = key;
+      //   maxLength = value;
+      //   if (loadingSize === productSize) {
+      //      var sizeString = JSON.stringify(productSize);
+      //       console.log(productSize, maxLength + 'yas bitch ');
+      //       input.keypress(function (e) {
+      //         var characterLength = $(this).val().length;
+      //         // $(".pplr_text.pplr_monogram.cstmfy_c_required:focus").after("<span style='color:red;'> "+ maxLength +" characters remaining </span>");
+      //         console.log(characterLength);
+      //         var textRemaining = maxLength - characterLength;
+      //           $(".pplr_text.pplr_monogram.cstmfy_c_required:focus").after("<span style='color:red;' class='rd-text'> "+ textRemaining +" characters left </span>")
+      //
+      //           // $('.rd-text').remove();
+      //         if (characterLength >= maxLength) {
+      //           $(".pplr_text.pplr_monogram.cstmfy_c_required:focus").after("<span style='color:red;'> WOOF! You have reached the max amount of characters. </span>")
+      //           .off();
+      //         }
+      //       })
+      //
+      //
+      //   }
+      //
+      //         // var loadingSize = $(".single-option-selector:checked").val();
+      //     // var changed =   hiddenLoadingSize.attr('value', loadingSize);
+      //
+      //         // hiddenLoadingSize.triggerHandler("change");
+      //        // console.log('the hidden size loader val is ' + changed);
+      //        // $(".pplr_text.pplr_monogram").after("<span style='color:red;'> "+ maxLength +" characters remaining </span>");
+      //   })
+
+
+
+      $(".single-option-selector").on("click", function(e) {
+        $('.pplr-sizes-').css("display", "none");
+          var hiddenSize = $("select.pplraddprice.cstmfy_c_required");
+
+          if(hiddenSize.length){
+            var results = hiddenSize.val(this.value);
+            var chosenSize = results.val().toLowerCase();
+              updatecondition(1);updatepricepplr(this);
+
+              Object.entries(productInfo).forEach(([key, value]) => {
+
+                if (chosenSize === key ) {
+                  productSize = key;
+                  maxLength = value;
+                    console.log(productSize, maxLength);
+                    var input = $(".pplr_text.pplr_monogram.cstmfy_c_required");
+                    input.attr('maxlength', maxLength);
+                    $(".rd-text-left").empty()
+                       .replaceWith("<span class='rd-text-left' style='color:red;'> WOOF! " +maxLength+" characters left</span>");
+                }
+
+                })
+
+          } else {
+            console.log('hello gaby');
+          }
+      });
+
+  }
+})(jQuery)
+
+
+
+
+jQuery('body').sizeSelector();
+
+
+
+
+</script>
+
+
+
+
+<div id="pplr-{{ product.id }}" class="product-personalizer" data-handle="{{product.handle}}"></div>
+<script async  src="//doshopify.com/product-personalizer/canvas-script.php?shop={{ shop.permanent_domain }}&prid={{ product.id }}"></script>
+{% endif %}
+{% endif %}
+{% endif %}
+{% if template contains 'cart' %}
+{% if product-personalizer == null %}
+<br>
+{% assign propertySize = item.properties | size %}
+{% if propertySize > 0 %}
+{% for p in item.properties %}
+{% assign hidden_property = p.first | first | replace: '_', true %}
+{% unless p.last == blank %}
+{% if hidden_property == 'true' %}
+  <span style="display:none;" class="product-customizer-line-item-prop" data-prop-name="{{ p.first }}">{{ p.first }}: {{ p.last }}</span>
+{% else %}
+{% if p.last contains '/assets/' %}
+{% assign foo = p.last %}
+{% assign my_variable = true %}
+{% endif %}
+{{ p.first }}:
+{% if p.last contains '/uploads/' or p.last contains '/assets/' or p.last contains '/products/' %}
+<a target="_blank" rel="noopener"  href="{{ p.last }}" src="{{ p.last }}" class="jslghtbx-thmb" data-jslghtbx download>{% if shop.metafields.customify['clickable_text'] %} {{ shop.metafields.customify['clickable_text'] }}{% else %}Click to view image{% endif %}</a>
+{% else %}
+{{ p.last | newline_to_br }}
+{% endif %}
+<br>
+{% endif %}
+{% endunless %}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% if product-personalizer == 'item-image'%}
+{% assign my_variable = false %}
+{% assign propertySize = item.properties | size %}
+{% if propertySize > 0 %}
+{% for p in item.properties %}
+{% unless p.last == blank %}
+{% if p.last contains '/assets/' %}
+{% if my_variable != true %}
+{% assign foo = p.last %}
+{% assign my_variable = true %}
+{% endif %}
+{% endif %}
+{% endunless %}
+{% endfor %}
+{% endif %}
+{% if my_variable != true %}
+{% if item_image_size %}
+{{ item | img_url: item_image_size }}
+{% else %}
+{{ item | img_url: 'medium' }}
+{% endif %}
+{% else %}
+{% if item_image_size %}
+{% assign image_size = item_image_size | prepend: '_' | append: '.png'  %}
+{{ foo | replace: '.png', image_size }}
+{% else %}
+{{ foo | replace: '.png', '_medium.png' }}
+{% endif %}
+{% endif %}
+{% endif %}

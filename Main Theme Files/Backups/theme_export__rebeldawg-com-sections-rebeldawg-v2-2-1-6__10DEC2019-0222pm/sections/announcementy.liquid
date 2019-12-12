@@ -1,0 +1,66 @@
+{%- if section.settings.show_announcementy -%}
+  {%- unless section.settings.home_page_only and template != 'index' -%}
+    {%- capture content -%}
+      <div class="container">
+        <span class="announcement-bar__content">{{ section.settings.announcementy_text | escape }}</span>
+      </div>
+    {%- endcapture -%}
+
+    {%- if section.settings.announcementy_link -%}
+      <a href="{{ section.settings.announcementy_link }}" class="announcement-bar announceit announcement-bar2">{{ content }}</a>
+    {%- else -%}
+      <div class="announcement-bar announcement-bar2">{{ content }}</div>
+    {%- endif -%}
+
+    <style>
+      .announcement-bar2 {
+        color: {{ section.settings.announcementy_color }};
+        background: {{ section.settings.announcementy_background }};
+      }
+    </style>
+  {%- endunless -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "shopify-section__announcement-bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcementy",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "home_page_only",
+      "label": "Home page only",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "announcementy_text",
+      "label": "Text",
+      "default": "Announce something here"
+    },
+    {
+      "type": "url",
+      "id": "announcementy_link",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "announcementy_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "announcementy_background",
+      "label": "Background",
+      "default": "#0c0c0d"
+    }
+  ]
+}
+{% endschema %}

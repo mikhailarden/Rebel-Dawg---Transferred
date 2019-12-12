@@ -1,0 +1,23 @@
+{%- comment -%}
+Product Customizer for Rebel Dawg (c)  -- Letter Swatches
+MIT License 
+Made by MacroMade 2019
+{%- endcomment -%}
+
+{%- assign letter-style = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z' -%}
+
+{%- assign letters = letter-style | split: "," -%}
+{%- for letter in letters -%}
+
+
+<div class="letter-style-buttons" {% if product.tags contains hide-letter %} style="display:none" {% endif %}>
+            <input type="radio" name="properties[Initial Letter]" value="{{ letter | capitalize }}" name="tag-group" id="{{ letter | capitalize }}"> 
+  			<label for="{{ letter | capitalize }}">
+                    {{letter}}
+                   
+  </label>
+
+</div>
+
+
+{%- endfor -%}

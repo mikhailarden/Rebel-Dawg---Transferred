@@ -1,0 +1,60 @@
+<style>
+  .box--shrinked {
+    max-width: 1250px!important;
+    margin: 0 auto;
+}
+</style>
+
+<div class="list-collections grid grid--large grid--center">
+ 
+  {% for block in section.blocks %}  
+    {%- for collection in collections -%}
+  {% if collection.handle == block.settings.block_collection %}
+      {%- unless collection.handle == 'frontpage' -%}
+        <div class="grid__cell 1/2--handheld-and-up 1/{{ grid_items_per_row }}--desk">
+         
+          {%- include 'collection-item', collection: collection, grid_items_per_row: grid_items_per_row, show_description: section.settings.show_description -%}
+        </div>
+      {%- endunless -%}
+  {% endif %}
+    {%- endfor -%}
+   {% endfor %}
+ 
+</div>
+
+{% schema %}
+{
+  "name": "List of collections page",
+"max_blocks": 20,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collections' description excerpt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "grid_items_per_row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Collections per row (desktop)",
+      "default": 3
+    }
+  ],
+ "blocks": [
+    {
+      "type": "select",
+      "name": "Add Button",
+      "settings": [
+        {
+          "id": "block_collection",
+          "type": "collection",
+       		"label": "Collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

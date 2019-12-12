@@ -1,0 +1,166 @@
+<script>
+
+  $(function() {
+    $('.flexed-reviews').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      autoplay: true,
+      mobileFirst: true,
+      autoplaySpeed: 2000,
+      responsive: [
+        {
+          breakpoint: 796,
+          settings: "unslick"
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+
+      ]
+    });
+  });
+
+
+
+
+</script>
+
+
+<div class="container" id="section-cta">
+  <div class="section-header text-center" style="text-align:center;">
+    <h3 class="section__title h3" style="margin-bottom:0px;"> {{ section.settings.text-box }} </h3>
+    <p> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></p>
+    <p> from 15 Reviews</p>
+  </div>
+
+  <div class="flexed-reviews">
+    {% for block in section.blocks %}  
+    <div class="reviews_container"> 
+
+      <div class="reviews_image">
+        <img style="height:100px;width:100px;" src="{% if block.settings.review != blank %} {{block.settings.review | img_url:'300x' }}{% else %} https://www.kurin.com/wp-content/uploads/placeholder-square.jpg {%endif %}">
+      </div>
+
+      <div class="reviews_content">
+        <p> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></p>
+        <b>{% if block.settings.heading != blank %}{{block.settings.heading }} {%else%} TITLE {% endif %} </b>
+        <p>{% if block.settings.content != blank %}{{block.settings.content }} {%else%} CONTENT {% endif %}</p>
+        <br>
+        <p>{% if block.settings.footer != blank %}{{block.settings.footer }} {%else%} Footer {% endif %}</p>
+      </div>
+
+
+    </div>
+    {% endfor %}
+
+  </div>
+</div>  
+
+<style>
+p { word-break: break-all }
+  .section-cta {
+  margin-bottom:20px;
+  }
+  .reviews_container, .flexed-reviews {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-evenly;
+  }
+
+  .reviews_container{
+    width:25%;
+  }
+  
+  .reviews_image {
+  display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  
+  .reviews_content {
+  display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding:20px;
+    text-align:center;
+  }
+
+
+
+</style>
+
+
+{% schema %}
+{
+"name": "Reviews Section",
+"max_blocks": 4,
+"settings": [
+{
+"id": "text-box",
+"type": "text",
+"label": "Heading",
+"default": "What our customers are saying..."
+}
+],
+"blocks": [
+{
+"type": "select",
+"name": "Add Review",
+"settings": [
+{
+"id": "review",
+"type": "image_picker",
+"label": "Review Image"
+},
+{
+"id": "heading",
+"type": "text",
+"label": "Review Heading",
+"default": "Heading"
+},
+{
+"id": "content",
+"type": "text",
+"label": "Review Content",
+"default": "Content"
+},
+{
+"id": "footer",
+"type": "text",
+"label": "Review Footer",
+"default": "Footer"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Reviews Section",
+"category": "Custom",
+"blocks": [
+{ 
+"type": "select"
+},
+{
+"type": "select"
+}
+]
+}
+]
+}
+{% endschema %}

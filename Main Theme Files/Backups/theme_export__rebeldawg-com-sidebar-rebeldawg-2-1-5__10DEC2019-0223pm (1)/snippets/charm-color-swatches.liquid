@@ -1,0 +1,47 @@
+{%- comment -%}
+Product Customizer for Rebel Dawg (c)  -- Charm Color Swatches
+MIT License 
+
+Product Customizer allows the merchant to upload numerous swatch colors and assign the values via Section Settings while uploading to Shopify's CDN. 
+Made by MacroMade 2019
+
+
+{%- endcomment -%}
+
+{%- if section.settings.charm-color-swatches -%}
+{%- assign charmstyles = section.settings.charm-color-swatches  -%}
+{%- else -%}
+{%- assign charmstyles = 'red,blue,green,yellow,purple,white,white horse' -%}
+{%- endif -%}
+
+
+
+{%- assign file_extension = 'jpg' -%}
+{%- assign styles = charmstyles | split: "," -%}
+{%- for style in styles -%}
+{%- assign lowercasecolor = style | downcase | prepend: 'hide-color-' | replace: " ", "_"  -%}
+{%- assign uppercasecolor = style | downcase | prepend: 'show-color-' | replace: " ", "_"  -%}
+
+{% if product.tags contains uppercasecolor %}
+<style>
+  /* Hides all of the colors, so the tag can only show specific colors */
+  .charm-color-swatch {
+  display:none;
+  }
+</style>
+{% endif %}
+
+<div class="charm-color-swatch" {% if product.tags contains lowercasecolor %} style="display:none" {% endif %} 
+     {% if product.tags contains uppercasecolor %} style="display:block" {% endif %}>
+            <input type="radio" name="properties[Mini Charm Color]" value="{{ style | capitalize }}" name="tag-group" id="{{ style | capitalize }}"> 
+  			<label class="perfected-circle" for="{{ style | capitalize }}"
+                   style="background-color: {{ style }}; 
+                          background-image: url({{ style | prepend: 'COLOR_SWATCHES_' | replace: " ", "_" | append: '.' | upcase | append: file_extension | file_img_url: '300x' }})">
+  {%- include 'icon' with 'tick' -%}
+  </label>
+
+</div>
+
+
+{%- endfor -%}
+

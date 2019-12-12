@@ -1,0 +1,630 @@
+{%- comment -%}
+Product Customizer for Rebel Dawg (c)
+MIT License 
+
+Product Customizer allows the selection of multiple line items to be passed on customer configured products. 
+Made by MacroMade 2019
+
+Setting conditions based on tags to hide non-used options.
+
+Conditions based on tags:
+1. Hide-Small/Medium/Large
+
+
+Dependencies:
+- jQuery 3.3.1
+
+
+StyleSheet is minified and now in Theme.liquid, see original v2.0.3 or lower for unminified.
+Javascript needs to remain in this file.
+
+[Tag List] -- Used to set conditionalities for specific form aspects.
+* 'product-customizer' - Initializes the product customizer 
+
+* 'hide-tagsizes' - Hides ALL tag sizes
+* 'hide-charmstyles' - Hides ALL charm styles
+* 'hide-charmcolors' - Hides ALL charm colors
+* 'hide-textstyles' - Hides ALL text styles
+* 'hide-textlines' - Hides ALL text lines
+
+
+* 'hide-small-tag' - hides the small tag button from form
+* 'hide-medium-tag' - hides the medium tag button from form
+* 'hide-large-tag' - hides the large tag button from form
+
+* 'hide-style-NAME' - hides the style name/color based on the value. (a)
+* 'hide-color-NAME' - hides the style name/color based on the value. (b)
+
+* 'hide-gothic-text' - hides the gothic font text option
+* 'hide-script-text' - hides the script font text option
+* 'hide-block-text' - hides the block font text option
+
+* 'hide-line1-front' - hides first text line; front-side [Depreceated]
+* 'hide-name-front' - hides first text line; front-side [NEW]
+* 'show-issue-front' - Displays issue for the Medical Tags
+* 'hide-line2-front' - hides 2nd text line; front-side
+* 'hide-line3-front' - hides 3rd text line; front-side
+* 'show-line4-front' - shows 4th text line; front-side
+* 'hide-line1-back' - hides first text line; back-side
+* 'hide-line2-back' - hides 2nd text line; back-side
+* 'hide-line3-back' - hides 3rd text line; back-side
+* 'show-line4-back' - shows 4th text line; back-side
+
+* 'character-limit-7-12' - sets the input limit when tag is setup.
+* 'character-limit-8-12' - sets the input limit when tag is setup.
+* 'character-limit-6-9' - sets the input limit when tag is setup.
+* 'character-limit-12-12' - sets the input limit when tag is setup.
+* 'character-limit-10-12' - sets the input limit when tag is setup.
+
+
+{%- endcomment -%}
+
+
+<style>
+  .form-options-2 > #tag-group-buttons > label {
+  max-width: 120px;
+  }
+  
+  .not-ready {
+  display:none;
+  }
+  
+</style>
+
+
+<button href="javascript:void(0)" class="initalize-button button--secondary button not-ready" disabled> Loading...</button>
+
+<div class="product-custom-form" > 
+<div style="  border: 3px #000 solid;padding: 1em;">
+
+{%- unless product.tags contains 'hide-tagsizes' -%}
+<div class="form-blocks">
+  <h3> Tag Size: <span id="tagsizesspan"> </span> </h3> 
+
+<div class="form-options-{% increment counter %}">
+<div id="tag-group-buttons">
+        {% unless product.tags contains 'hide-small-tag' %}
+            <input type="radio" name="properties[Tag Size]" value="Small" name="tag-group" id="small"> 
+  			<label for="small">Small</label>
+  			
+        {% endunless %}
+
+        {% unless product.tags contains 'hide-medium-tag' %}
+            <input type="radio" name="properties[Tag Size]" value="Medium" name="tag-group"id="medium"> 
+  			<label for="medium">Medium</label>
+  			
+        {% endunless %}
+
+        {% unless product.tags contains 'hide-large-tag' %}
+            <input type="radio" name="properties[Tag Size]" value="Large" name="tag-group" id="large"> 
+  			<label for="large">Large</label>
+  			
+        {% endunless %}
+  </div> 
+</div>
+</div> <!--- End Form Blocks ---> 
+{%- endunless -%}
+  
+ 
+  
+  
+
+{%- unless product.tags contains 'hide-charmstyles' -%}
+<div class="form-blocks">
+<h3> Mini Charm Style: <span id="charmstylespan"> </span> </h3>
+
+<div class="form-options-{% increment counter %}">
+
+  
+
+<div id="tag-group-swatches">
+  
+  {% include 'charm-style-swatches' %}
+        
+  </div> 
+</div>
+</div> <!--- End Form Blocks ---> 
+{%- endunless -%}
+
+  
+{%- unless product.tags contains 'hide-charmcolors' -%}
+<div class="form-blocks">
+<h3> Mini Charm Color: <span id="charmcolorspan"> </span></h3>
+
+<div class="form-options-{% increment counter %}">
+
+<div id="tag-group-swatches">
+       {% include 'charm-color-swatches' %}
+  </div> 
+</div>
+</div> <!--- End Form Blocks ---> 
+{%- endunless -%}
+  
+  
+ {%- unless product.tags contains 'hide-textstyles' -%}
+<div class="form-blocks">
+<h3> Text Style: <span id="textstylespan"> </span> </h3>
+
+<div class="form-options-{% increment counter %}">
+
+<div id="tag-group-buttons" class="no-padding">
+        {% unless product.tags contains 'hide-script-text' %}
+            <input type="radio" name="properties[Text Style]" value="Script" name="tag-group" id="script"> 
+  			<label for="script"><img src="{{ 'FONT_OPTIONS_script.jpg' | asset_img_url: '300x' }}"></label>
+  			
+        {% endunless %}
+
+        {% unless product.tags contains 'hide-block-text' %}
+            <input type="radio" name="properties[Text Style]" value="Block" name="tag-group"id="block"> 
+  			<label for="block"><img src="{{ 'FONT_OPTIONS_block.jpg' | asset_img_url: '300x' }}"></label>
+  			
+        {% endunless %}
+
+        {% unless product.tags contains 'hide-gothic-text' %}
+            <input type="radio" name="properties[Text Style]" value="Gothic" name="tag-group" id="gothic"> 
+  			<label for="gothic"><img src="{{ 'FONT_OPTIONS_gothic.jpg' | asset_img_url: '300x' }}"></label>
+  			
+        {% endunless %}
+  
+      {% if product.tags contains 'show-retro-text' %}
+            <input type="radio" name="properties[Text Style]" value="Retro" name="tag-group" id="retro"> 
+  			<label for="retro"><img src="{{ 'FONT_OPTIONS_retro.jpg' | asset_img_url: '300x' }}"></label>
+        {% endif %}
+  
+  {% if product.tags contains 'show-outlaw-text' %}
+            <input type="radio" name="properties[Text Style]" value="Outlaw" name="tag-group" id="outlaw"> 
+  			<label for="outlaw"><img src="{{ 'FONT_OPTIONS_outlaw.jpg' | asset_img_url: '300x' }}"></label>
+        {% endif %}
+  
+  </div> 
+</div>
+</div> <!--- End Form Blocks ---> 
+{%- endunless -%}
+  
+  
+    {%- if product.tags contains 'show-all-letters' -%}
+<div class="form-blocks">
+<h3> Letter Styles: <span id="letterspan"> </span> </h3>
+
+<div class="form-options-{% increment counter %}">
+
+  
+
+<div id="tag-group-buttons">
+  
+  {% include 'letter-swatches' %}
+        
+  </div> 
+</div>
+</div> <!--- End Form Blocks ---> 
+{%- endif -%}
+ 
+  
+  {%- unless product.tags contains 'hide-textlines' -%}
+<div class="form-blocks">
+<div class="form-options-{% increment counter %}">
+
+<div id="tag-group-lines">
+        {% unless product.tags contains 'hide-line1-front' %}
+            <label for="line-1-front-side">Name</label>
+            <input class="block-font" id="line-1-front-side" type="text" name="properties[Name]" minlength='1'>
+        {% endunless %}
+  <div id="charNum"></div>
+
+   {% if product.tags contains 'show-issue-front' %}
+            <label for="line-1-front-side">Issue (Front)</label>
+            <input class="block-font" id="line-1-front-side" type="text" name="properties[Issue]">
+        {% endif %}
+
+          {% unless product.tags contains 'hide-line2-front' %}
+            <label for="line-2-front-side">Line 2 - Front Side (Optional)</label>
+            <input id="line-2-front-side" class="block-font" type="text" name="properties[Line 2 - Front Side]">
+        {% endunless %}
+
+          {% unless product.tags contains 'hide-line3-front' %}
+            <label for="line-3-front-side">Line 3 - Front Side (Optional)</label>
+            <input id="line-3-front-side" class="block-font" type="text" name="properties[Line 3 - Front Side]">
+        {% endunless %}
+
+           {% if product.tags contains 'show-line4-front' %}
+            <label for="line-3-front-side">Line 4 - Front Side (Optional)</label>
+            <input id="line-3-front-side" class="block-font" type="text" name="properties[Line 4 - Front Side]">
+        {% endif %}
+  
+      	          {% unless product.tags contains 'hide-line1-back' %}
+            <label for="line-1-back-side">Line 1 - Back Side</label>
+            <input id="line-1-back-side" class="block-font" type="text" name="properties[Line 1 - Back Side]">
+        {% endunless %}
+  
+        	{% unless product.tags contains 'hide-line2-back' %}
+            <label for="line-2-back-side">Line 2 - Back Side</label>
+            <input id="line-2-back-side" class="block-font" type="text" name="properties[Line 2 - Back Side]">
+        {% endunless %}
+  
+  {% unless product.tags contains 'hide-line3-back' %}
+            <label for="line-3-back-side">Line 3 - Back Side</label>
+            <input id="line-3-back-side" class="block-font" type="text" name="properties[Line 3 - Back Side]">
+        {% endunless %}
+
+          {% if product.tags contains 'show-line4-back' %}
+            <label for="line-3-back-side">Line 4 - Back Side</label>
+            <input id="line-3-back-side" class="block-font" type="text" name="properties[Line 4 - Back Side]">
+        {% endif %}
+  </div> 
+</div>
+</div> <!--- End Form Blocks --->   
+{%- endunless -%}
+  
+
+</div> <!--- End Product Custom Form --->
+</div>
+
+
+<script>
+  
+  
+  {%- unless product.tags contains 'hide-tagsizes' -%}
+  
+$(document).ready(function() {
+
+    $(".product__form").click(function() {
+        console.log("Product form clicked");
+
+        if ($('input[name="properties[Tag Size]"]').is(':checked')) {
+             $('.product__add-to-cart').removeClass("disabled-cart");
+            $(".disabled-cart").text("Add to Cart");
+        }
+      
+      else {
+     
+        $('.product__add-to-cart').addClass("disabled-cart");
+            $(".disabled-cart").text("Oops, you have information missing");
+      }
+
+    });
+
+});
+
+
+// On checker change for the Tag Size 
+
+$(document).ready(function() {
+
+
+    $('input[name="properties[Tag Size]"]').change(function() {
+        if ($(this).prop('checked')) {
+            $('.product__add-to-cart').removeClass("disabled-cart");
+            $('.product__add-to-cart').removeClass("disabled-clicked");
+            $(".product__add-to-cart").text("Add To Cart");
+        }
+    });
+
+});
+  {%- endunless %}
+
+// Hinders button press until loading is complete
+  
+  $(document).ready(function() {
+
+    $(".not-ready").removeAttr("disabled");
+  $('.not-ready').removeClass('not-ready').addClass('ready');
+    $(".ready").html('2. Tap to make it personal!'); // Changes the button text from 'loading...' to the actual text at load. 
+    console.log("Product Customizer Loaded & Ready");
+});
+  
+  
+// Initially toggle customizer form visibility
+$('.initalize-button').click(function() {
+    event.preventDefault(); 
+    $('.product-custom-form').toggleClass("active");
+   console.log("Product Customizer Initialized");
+});    
+    
+  
+// if checkbox checked then font style will be applied to line
+
+ $('#script').change(function(){
+   if($(this).is(':checked')) 
+       $('#line-1-front-side').addClass('script-font'); 
+   		$('#line-1-front-side').removeClass('block-font');
+   		$('#line-1-front-side').removeClass('gothic-font');
+     $('#line-1-front-side').removeClass('retro-font');
+       $('#line-1-front-side').removeClass('outlaw-font');
+    console.log("Script Text Style Selected");
+ 
+ });  
+
+  
+  // rinse and repeat for block font
+  
+   $('#block').change(function(){
+   if($(this).is(':checked')) 
+       $('#line-1-front-side').addClass('block-font'); 
+   		$('#line-1-front-side').removeClass('script-font');
+   		$('#line-1-front-side').removeClass('gothic-font');
+       $('#line-1-front-side').removeClass('retro-font');
+         $('#line-1-front-side').removeClass('outlaw-font');
+      console.log("Block Text Style Selected");
+  
+ });  
+  
+     $('#gothic').change(function(){
+   if($(this).is(':checked')) 
+       $('#line-1-front-side').addClass('gothic-font'); 
+   		$('#line-1-front-side').removeClass('script-font');
+   		$('#line-1-front-side').removeClass('block-font');
+       $('#line-1-front-side').removeClass('retro-font');
+           $('#line-1-front-side').removeClass('outlaw-font');
+        console.log("Gothic Text Style Selected");
+  
+ });  
+  
+       $('#retro').change(function(){
+   if($(this).is(':checked')) 
+       $('#line-1-front-side').addClass('retro-font'); 
+   		$('#line-1-front-side').removeClass('script-font');
+   		$('#line-1-front-side').removeClass('block-font');
+         $('#line-1-front-side').removeClass('gothic-font');
+              $('#line-1-front-side').removeClass('outlaw-font');
+        console.log("Retro Text Style Selected");
+  
+ }); 
+  
+         $('#outlaw').change(function(){
+   if($(this).is(':checked')) 
+       $('#line-1-front-side').addClass('outlaw-font'); 
+   		$('#line-1-front-side').removeClass('script-font');
+   		$('#line-1-front-side').removeClass('block-font');
+         $('#line-1-front-side').removeClass('gothic-font');
+                $('#line-1-front-side').removeClass('retro-font');
+        console.log("Outlaw Text Style Selected");
+  
+ }); 
+  
+
+
+// Initially toggles having input value translated to text
+  
+// First for Tag Sizes  
+  $('input[name="properties[Tag Size]"]').change(function(){
+var value = $( 'input[name="properties[Tag Size]"]:checked' ).val();
+	$('#tagsizesspan').text(value);
+     console.log("Tag Size Value Selected");
+});
+  
+  // Second for Charm Styles  
+  $('input[name="properties[Charm Style]"]').change(function(){
+var value = $( 'input[name="properties[Charm Style]"]:checked' ).val();
+	$('#charmstylespan').text(value);
+    console.log("Charm Style Value Selected");
+});
+  
+  
+    // Third for Charm Colors  
+  $('input[name="properties[Mini Charm Color]"]').change(function(){
+var value = $( 'input[name="properties[Mini Charm Color]"]:checked' ).val();
+	$('#charmcolorspan').text(value);
+    console.log("Charm Color Value Selected");
+});
+  
+      // Fourth for Charm Colors  
+  $('input[name="properties[Text Style]"]').change(function(){
+var value = $( 'input[name="properties[Text Style]"]:checked' ).val();
+	$('#textstylespan').text(value);
+    console.log("Text Style Value Selected");
+});
+  
+        // Fifth for Initial Product Color  
+  $('input[name="single-option-selector-0"]').change(function(){
+var value = $( 'input[name="single-option-selector-0"]:checked' ).val();
+	$('.swatch__color__name').text(value);
+    console.log("Initial variant color Style Value Selected");
+});
+  
+  
+          // Sixth for Initial Letter Swatches  
+  $('input[name="properties[Initial Letter]"]').change(function(){
+var value = $( 'input[name="properties[Initial Letter]"]:checked' ).val();
+	$('#letterspan').text(value);
+    console.log("Initial Letter Swatch Value Selected");
+});
+  
+ 
+  /*  Begin Function for tying in the character setup. */
+
+  {%- if product.tags contains 'character-limit-7-12' -%}  
+  
+$(document).on("change", "[id$=small]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+        $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 7;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+
+$(document).on("change", "[id$=large]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+      $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 12;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+  
+  {%- endif -%}
+  
+  /* Rinse & Repeat for Each Tag Type */
+  
+  {%- if product.tags contains 'character-limit-8-12' -%}  
+  
+$(document).on("change", "[id$=small]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+       $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 8;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+
+$(document).on("change", "[id$=large]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+      $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 12;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+  
+  {%- endif -%}
+  
+  {%- if product.tags contains 'character-limit-6-9' -%}  
+  
+$(document).on("change", "[id$=small]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+       $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 6;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+
+$(document).on("change", "[id$=large]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+      $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 9;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+  
+  {%- endif -%}  
+  
+    {%- if product.tags contains 'character-limit-12-12' -%}  
+  
+$(document).on("change", "[id$=small]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+         $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 12;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+
+$(document).on("change", "[id$=large]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+    $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 12;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+  
+  {%- endif -%}
+  
+    {%- if product.tags contains 'character-limit-10-12' -%}  
+  
+
+  
+$(document).on("change", "[id$=small]", function(){
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+  
+    $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 10;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+
+$(document).on("change", "[id$=large]", function() {
+    if ($(this).is(":checked")) $("[id$=line-1-front-side]").attr("maxlength", "100");
+    console.log("Max Input Length Applied via Small Text Style.");
+   $('#line-1-front-side').keyup(updateCount);
+$('#line-1-front-side').keydown(updateCount);
+
+function updateCount() {
+    var cs = $(this).val().length;
+   var a = 12;
+    var b = $("#line-1-front-side").val().length;
+    if (cs >= a) $("#charNum").text(" you have reached the limit"); else {
+        var c = a - cs;
+        $("#charNum").text(c + " characters left");
+    }}
+  
+});
+  
+  {%- endif -%}
+</script>
+

@@ -1,0 +1,130 @@
+{%- comment -%}
+/********
+* AJAX Function to Smile.io which will find customer data based on the AJAX request
+* Built by MacroMade Inc. Will wrap this to only search based on customer login.
+*
+*********/
+{%- endcomment -%}
+
+{% assign customer_id = '{{customer.id}}' %}
+<script> 
+$(function() {
+async function customerData() {
+// General functions, Dev_mode for console response, and a few simple 
+var dev_mode = "false";
+if (dev_mode){
+    
+var customer_id = '{{customer_id}}';
+var customer_email = /**/ "elsievesta@gmail.com";
+} else {
+var customer_id = '{{customer_id}}';
+var customer_email = /**/ "{{customer.email}}";    
+}
+
+/*
+Before continuing, let's set some cookies. This cookie expires 3 days later. We can adjust this to be less.
+Define when the cookie will be removed. Value can be a Number which will be interpreted as days from time of creation or a Date instance. If omitted, the cookie becomes a session cookie.
+To create a cookie that expires in less than a day, you can check the FAQ on the Wiki. https://github.com/js-cookie/js-cookie/wiki/Frequently-Asked-Questions#expire-cookies-in-less-than-a-day
+*/
+
+Cookies.set('vip_checker_cookie', 'true', { expires: 3 })
+
+const customHeaders = new Headers();
+customHeaders.append('Authorization', 'Bearer int_siECe1gDRuSSxUK2bydW');
+const URL = `https://api.smile.io/v1/customers?limit=250`;
+try {
+const fetchResult = fetch(
+new Request(URL, { method: 'GET', cache: 'reload', headers: customHeaders })
+);
+const response = await fetchResult;
+const jsonData = await response.json();
+if (dev_mode){ console.log(jsonData); }
+// Function here. 
+
+// check if a customer is in {gold/silver/e.t.c} vip tier using customer id
+var member_state = []
+var member_vip_tier_id = []
+var member_points_balance = []
+var member_id = []
+
+for (var i = 0; i < jsonData.customers.length; i++) {
+if (jsonData.customers[i].email === customer_email) {
+member_email = jsonData.customers[i].email;
+member_state = jsonData.customers[i].state;
+member_vip_tier_id = jsonData.customers[i].vip_tier_id;
+member_points_balance = jsonData.customers[i].points_balance;
+member_id = jsonData.customers[i].id;
+}
+}
+if (dev_mode){ 
+console.log(member_email+' '+ member_state+' '+member_vip_tier_id+' '+' '+member_points_balance);
+}
+vipView(member_email,member_state,member_vip_tier_id,member_points_balance,member_id,customer_id);
+
+} catch(e){
+throw Error(e);
+}
+}
+
+function vipView(member_email,member_state,member_vip_tier_id,member_points_balance,customer_id) {
+// Let's use AJAX and update the customer data so that the merchant/devs can use 
+
+var rebel_dawgie = '';
+var silver_dawgie = '10386';
+var golden_dawgie = '10387';
+
+if (member_vip_tier_id == golden_dawgie) {
+var vip_tier = "Golden Dawgie";
+} else if (member_vip_tier_id == silver_dawgie) {
+var vip_tier = "Silver Dawgie";
+} else {
+var vip_tier = "Rebel Dawgie";
+}
+
+// console.log( "ready!" );
+var customer_id = {{customer_id}};
+var dev_mode = 'true';
+var store_url = 'https://rebeldawg-com.myshopify.com/';
+
+var auth_header = '6cc380d1eaf6c0074a26f71c15dce364';
+var auth_pass = 'f6c77bb176a4f7adb9a31dfe0d7bd3d4';
+var tag_data = 'vip_email['+member_email+'],vip_state['+member_state+'],vip_tier['+vip_tier+'],vip_balance['+member_points_balance+']'; //seperate each tag by comma. 
+var proxy = 'https://macromade-cors-anywhere.herokuapp.com/';
+// Shopify Endpoint
+var myStore = store_url+'admin/api/2019-10/customers/'+customer_id+'.json';
+//  Accesing endpoint from a browser will work without problem ...
+// However to make it work, we are going to use the cors-anywhere free service to bypass this
+$.ajax({
+beforeSend: function (xhr) {
+    xhr.setRequestHeader ("Authorization", "Basic " + btoa(""+auth_header+"" +":"+ ""+auth_pass+""));
+},
+type: "PUT",
+url: proxy + myStore,
+data: {
+    "customer": {
+    "id": ""+customer_id+"",
+    "tags": ""+tag_data+"",
+    //"note": "Gender["+gender+"],D.O.B["+date_of_birth+"],Size_Tops["+size_tops+"],Size_Bottoms["+size_bottoms+"],Waist_size["+waist_size+"], Shoe_Size["+size_shoes+"], Style["+style+"], Favorite_Brands["+favorite_brands+"], Preferred_Item["+preferred_items+"]"
+    }
+},
+success: function(data){
+    if (dev_mode) { 
+    console.log('Customer updated successfully!');
+    }
+},
+error: function(res){
+    console.log(res);
+}
+});
+}
+
+var cookie_check = Cookies.get('vip_checker_cookie');
+if (cookie_check == 'true') {
+// checks for the last update of the customer account, if false we run the function that checks Smile API for customer data.
+// note, cookie expires in 3 days. 
+} else {
+customerData();
+}
+
+});
+</script>

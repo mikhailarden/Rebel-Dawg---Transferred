@@ -1,0 +1,400 @@
+{% form 'product', product, class: 'product__form' %}
+{%- assign variant = bold_selected_or_first_available_variant -%}
+{%- include 'bold-variant' with variant, output: 'none' -%}
+  <div class="product__variants">
+    {%- if bold_variants_size > 1 -%}
+      {%- assign show_variants_selectors = true -%}
+    {% elsif product.has_only_default_variant == false and section.settings.hide_variants_if_only_one == false %}
+      {%- assign show_variants_selectors = true -%}
+    {%- else -%}
+      {%- assign show_variants_selectors = false -%}
+    {%- endif -%}
+
+    {%- if show_variants_selectors -%}
+      {%- for option in product.options_with_values -%}
+        <div class="form__control">
+            <ul class="product__available-colors list--unstyled" data-selector-type="color">
+          <label for="single-option-selector-{{ forloop.index0 }}" class="form__label">{{ option.name }} <span class="swatch__color__name">  </span></label>
+
+          {%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' -%}
+          {%- assign size_label = 'size,taille,bröße,tamanho,tamaño,koko,サイズ' -%}
+
+          {%- assign downcase_option = option.name | downcase -%}
+
+          {%- if section.settings.show_color_swatch and color_label contains downcase_option -%}
+
+
+{%- assign optName = 'options' | append: forloop.index -%}
+{%- assign option_values = [optName] | default: option.values -%}
+{%- for value in option_values -%}
+                {%- include 'variant-option-properties', value: value -%}
+
+                {%- assign downcase_value = value | downcase -%}
+                {%- assign color_swatch_white = false -%}
+
+                {%- if 'white,blanc,blanco,白,weiß,vit,branco' contains downcase_value -%}
+                  {%- assign color_swatch_white = true -%}
+                {%- endif -%}
+
+
+                <li class="product__color {% unless allow_variant_selection %}product__color--unavailable{% endunless %}" title="{{ value }}">
+                  <input id="{{ product.id }}-color-swatch-{{ forloop.index0 }}" {% unless allow_variant_selection %}disabled{% endunless %} class="single-option-selector" name="single-option-selector-{{ forloop.parentloop.index0 }}" data-option-index="option{{ forloop.parentloop.index }}" type="radio" value="{{ value | escape }}">
+                  <label aria-label="{{value}}" {% if allow_variant_selection %}tabindex="0"{% endif %} class="color-swatch {% if color_swatch_white %}color-swatch--white{% endif %}" for="{{ product.id }}-color-swatch-{{ forloop.index0 }}" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.png' | asset_url }})"></label>
+                  {%- include 'icon' with 'tick' -%}
+                </li>
+              {%- endfor -%}
+
+            </ul>
+          {%- elsif section.settings.show_size_swatch and size_label contains downcase_option -%}
+          <ul class="product__available-sizes list--unstyled" data-selector-type="size">
+            {%- assign optName = 'options' | append: forloop.index -%}
+            {%- assign option_values = [optName] | default: option.values -%}
+            {%- for value in option_values -%}
+                {%- include 'variant-option-properties', value: value -%}
+
+                <li class="product__size {% unless allow_variant_selection %}product__size--unavailable{% endunless %}">
+                  <input id="{{ product.id }}-{{ downcase_option | escape }}-{{ forloop.index0 }}"  {% unless allow_variant_selection %}disabled{% endunless %} type="radio" class="single-option-selector"   name="single-option-selector-{{ forloop.parentloop.index0 }}" data-option-index="option{{ forloop.parentloop.index }}"  value="{{ value | escape }}">
+                  <label {% if allow_variant_selection %}tabindex="0"{% endif %} for="{{ product.id }}-{{ downcase_option | escape }}-{{ forloop.index0 }}" aria-label="{{value}}" class="product__size-label">{{ value }}</label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="styled-select styled-select--secondary">
+              {%- include 'icon' with 'dropdown-arrow' -%}
+
+              <select class="single-option-selector" id="single-option-selector-{{ forloop.index0 }}" data-option-index="option{{ forloop.index }}" data-selector-type="select">
+                {%- assign optName = 'options' | append: forloop.index -%}
+                {%- assign option_values = [optName] | default: option.values -%}
+                {%- for value in option_values -%}
+                	{%- include 'variant-option-properties', value: value -%}
+                	<option value="{{ value | escape }}" {% unless allow_variant_selection %}disabled{% endunless %} {% if option.selected_value == value %}selected="selected"{% endif %}>{{ value }}</option>
+                {%- endfor -%}
+              </select>
+          </div>
+
+          {%- endif -%}
+    </div>
+    {%- endfor -%}
+
+    
+    {% include 'hulkcode_options' %}
+  
+
+
+<script>
+
+function handleFirstTab(e) {
+    if (e.keyCode === 9) { // the "I am a keyboard user" key
+        document.body.classList.add('user-is-tabbing');
+        window.removeEventListener('keydown', handleFirstTab);
+    }
+}
+
+
+const chooseLine = (data, max) => {
+  Object.entries(data).forEach(([key, value]) => {
+    let input = key;
+    let order = value - 1; //  substracting 1 to get zero based val
+    let textInput = $(".hulkapps_option_value input[type='text']");
+    console.log(order,input, max);
+      let charLoadCount = textInput.eq(order).val().replace(/\s/g, '').length
+      let charEventCount =  max - charLoadCount;
+
+
+    // textInput.eq(order).attr('maxlength',max).addClass('active'); // commented out max length per Stacie's request, uncomment out for functionality again
+
+    if(charLoadCount > 1) {
+          textInput.eq(order).parent().parent().find('.charHolder').text("You have "+ charEventCount +" characters left.");
+      // If a user types a bunch of text beofre setting the max length  or changes size this will prevent a negative number from displaying
+        if (charEventCount <= 0) {
+            textInput.eq(order).parent().parent().find('.charHolder').text("You've reached the max amount of characters that fit in the tag!");
+              event.preventDefault();
+        }
+    }
+     else {
+          textInput.eq(order).parent().parent().find('.charHolder').text("You have "+ max +" characters left.");
+    }
+
+    // Shows characters remaining as user types
+    textInput.eq(order).on('keyup',function(e){
+      let charCount = $(this).val().replace(/\s/g, '').length;
+      let remaining = max - charCount;
+
+
+      if(remaining >= 1) {
+      $(this).parent().parent().find('.charHolder').text("You have "+ remaining +" characters left.");
+      }
+
+      if (remaining === 0) {
+      $(this).parent().parent().find('.charHolder').text("You've reached the max amount of characters that fit in the tag!");
+            e.preventDefault();
+      }
+     });
+
+    return order;
+
+  });
+}
+
+const showColorValue = () => {
+// Product Personalizer
+$(".hulkapps_swatch_option .hulkapps_option_child").not('.font__swatch').click(
+function(){ // adds color label to chosen input on customizer
+  console.log('click event being fired');
+    $(this).parents().children('.hulkapps_option_name').children('span').html($(this).attr('value'));
+});
+
+// Regular Shopify Variants
+$('.product__color').click(
+function(){
+    $('.swatch__color__name').text($(this).attr('title'));
+});
+}
+  
+  
+
+const togglePersonalizer = () => {
+  $('.rebel__personalizer__container .rebel__personalizer__btn').click(function(){
+      $('.rebel__personalizer').fadeToggle('fast', function(){
+         // trigger size on load
+            $(".hulkapps_radio_option input:first").trigger("change");
+            enlargeFontSwatch();
+            $(".hulkapps_option_value").after('<span class="charHolder"></span>');
+      })
+  });
+}
+
+const checkPersonalizerExists = () => {
+  setTimeout(function(){
+    if($('.hulkapps_option').length) { // checks if product has personalizer options set, if so appends button
+        $('.rebel__personalizer__container').prepend('<a class="rebel__personalizer__btn button" href="javascript:void(0)">2. Tap to make it personal!</a>');
+      
+$('.hulkapps_option_name').append("<span class='personalizer__value'> </span>"); // adding this so i can add tooltip later
+          togglePersonalizer();
+          setMaxOneSize();
+      	showColorValue();
+		previewFontStyle();
+      checksVariantSelection();
+    }
+  }, 1500);
+}
+
+const checksVariantSelection = () => {
+  if ($('ul[data-selector-type="color"]').length && $('input.single-option-selector').length) {
+    if($('input.single-option-selector').is(":checked") === false) {
+      $('.product__add-to-cart').attr({
+      'disabled' : 'disabled',
+      'title': 'WOOF please pick a color'
+      });
+      $('.product__available-colors').prepend("<h4 class='color__error'> 1. Please pick a color </h4>");
+    }
+  }
+
+}
+
+const allowsAddToCart = () => {
+  $( 'ul[data-selector-type="color"] .single-option-selector').change(function() {
+        $('.product__add-to-cart').removeAttr('disabled title');
+        $('.color__error').fadeOut(250, function(){ $(this).remove();});
+  });
+}
+
+
+const enlargeFontSwatch = () => {
+  let capitalizedFont = $(".hulkapps_option_name:contains('Text')").next().children().children();
+   let lowerCaseFont = $(".hulkapps_option_name:contains('text')").next().children().children();
+    if(capitalizedFont || lowerCaseFont) {
+
+      capitalizedFont.addClass('font__swatch').css({
+      "width": "125px",
+      "height": "47px",
+      "border-radius": "0",
+      "padding": "40px 0 0 0",
+      "border": "3px solid #000000",
+      "margin": "4px 10px"
+      });
+
+      lowerCaseFont.addClass('font__swatch').css({
+      "width": "125px",
+      "height": "47px",
+      "border-radius": "0",
+      "padding": "40px 0 0 0",
+      "border": "3px solid #000000",
+      "margin": "4px 10px"
+      });
+
+  } else {
+       console.log('no font style in this product')
+    }
+}
+
+const previewFontStyle = () => {
+  var selector = ".hulkapps_option_set input[type='text']:first";
+  $(".hulkapps_option_child[data-conditional-value='Gothic']").click(function(){
+    console.log('gothic click');
+    $(selector).addClass('gothic__font').removeClass('block__font script__font');
+  });
+
+  $(".hulkapps_option_child[data-conditional-value='Block']").click(function(){
+       console.log('block click');
+    $(selector).addClass('block__font').removeClass('gothic__font script__font');
+  });
+
+  $(".hulkapps_option_child[data-conditional-value='Script']").click(function(){
+       console.log('script click');
+    $(selector).addClass('script__font').removeClass('gothic__font block__font');
+  });
+}
+
+// grabbing tag  product data from shopify
+    var productInfo = {
+      {% for t in product.tags %}
+       {% if t contains "size:" %}
+      {% assign tag = t | split: 'size:' | last %}
+        {{ tag | split: '-' | join:':' }},
+
+        {% endif %}
+     {% endfor %}
+
+    };
+
+    var maxInput = {
+      {% for m in product.tags %}
+       {% if m contains "max:"  %}
+      {% assign max = m | split: 'max:' | last  %}
+        {{max | split: '-' | join:':' }},
+
+        {% endif %}
+     {% endfor %}
+
+    };
+
+    // var tagSize = Object.keys(productInfo);
+        // console.log(productInfo);
+    //     console.log(Object.values(productInfo));
+
+        var productSize = "";
+        var maxLength = "";
+
+      const setMaxOneSize = () => {
+        var sizeCount = Object.keys(productInfo).length;
+        var generalMaxLength = Object.values(productInfo);
+
+          if ( sizeCount === 1) {
+              chooseLine(maxInput,generalMaxLength);
+            } else {
+              console.log('more than one size offered in this tag');
+            }
+      }
+
+          const setMaxLength = (data, size, max) => {
+            Object.entries(data).forEach(([key, value]) => {
+              productSize = key;
+              max = value;
+
+              if (size === productSize) {
+                  chooseLine(maxInput,max);
+                  return productSize, max;
+                  }
+                });
+              }
+
+$(document.body).on("click" , '.hulkapps_radio_option input', function(e){
+  // finding chosen size by user
+    let chosenSize = this.value.toLowerCase();
+     setMaxLength(productInfo,chosenSize,maxLength);
+       });
+
+$(document).ready(function (){
+  //Does not allow user to add to cart if color not chosen
+// allowsAddToCart();
+checkPersonalizerExists();
+
+
+
+// Accessibility for users who are tabbing blue focus line will appear
+  window.addEventListener('keydown', handleFirstTab);
+});
+
+
+ </script>
+
+
+ <div class="form__control hidden-lap-and-up">
+   <label class="form__label">{{ 'product.form.price' | t }}</label>
+
+   <div class="product__prices">
+     {%- if bold_selected_or_first_available_variant.compare_at_price > bold_variant_price -%}
+       <span class="product__price product__price--new h4" data-money-convertible>{{ bold_variant_price | money }}</span><!--
+                   --><span class="product__price product__price--old h4" data-money-convertible>{{ bold_selected_or_first_available_variant.compare_at_price | money }}</span>
+     {%- else -%}
+       <span class="product__price h4" data-money-convertible>{{ bold_variant_price | money }}</span>
+     {%- endif -%}
+   </div>
+ </div>
+
+      <div class="no-js form__control">
+        <label for="product-select-{{ product.id }}" class="form__label">{{ 'product.form.variant_label' | t }}</label>
+
+        <div class="styled-select styled-select--secondary">
+          {%- include 'icon' with 'dropdown-arrow' -%}
+
+          <select id="product-select-{{ product.id }}" name="id">
+            {%- for variant in product.variants -%}
+{%- include 'bold-variant' with variant, hide_action: 'skip' -%}
+               <option {% if variant == bold_selected_or_first_available_variant %}selected="selected"{% endif %}  {% unless variant.available %}disabled="disabled"{% endunless %} value="{{ variant.id }}" data-sku="{{ variant.sku }}">{{ variant.title }} - {{ bold_variant_price | money }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    {%- else -%}
+    <input type="hidden" name="id" data-sku="{{ bold_selected_or_first_available_variant.sku }}" value="{{ bold_selected_or_first_available_variant.id }}">
+    {%- endif -%}
+  </div>
+
+	{% include 'product-personalizer' %}
+
+  {%- if section.settings.show_quantity_selector -%}
+    <div class="form__control">
+      <label class="form__label">{{ 'product.form.quantity' | t }}</label>
+
+      <div class="quantity-selector" >
+        <a href="#" data-action="decrease-product-quantity" title="{{ 'product.form.decrease_quantity' | t }}">{%- include 'icon' with 'minus' -%}</a>
+        <span class="quantity-selector__current-quantity">1</span>
+        <a href="#" data-action="increase-product-quantity" title="{{ 'product.form.increase_quantity' | t }}">{%- include 'icon' with 'plus' -%}</a>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <input type="hidden" name="quantity" value="1">
+
+  <div class="product__payment-container">
+    {%- if bold_selected_or_first_available_variant.available -%}
+      <button type="submit" class="product__add-to-cart button button--primary" aria-label="Add to Cart Button">
+        {%- if product.template_suffix == 'pre-order' -%}
+          {{- 'product.form.pre_order' | t -}}
+        {%- else -%}
+          {{- 'product.form.add_to_cart' | t -}}
+        {%- endif -%}
+      </button>
+    {%- else -%}
+      <button type="submit" class="product__add-to-cart button button--secondary"  aria-label="Add to Cart Button"  disabled="disabled">{{ 'product.form.sold_out' | t }}</button>
+    {%- endif -%}
+
+    {%- if section.settings.show_payment_button -%}
+      {{ form | payment_button }}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_payment_button and bold_selected_or_first_available_variant.available == false -%}
+    <style>
+      #shopify-section-{{ section.id }} .shopify-payment-button {
+        display: none;
+      }
+    </style>
+  {%- endif -%}
+{%- endform -%}
+{% unless bundle_loaded == 'true' %}
+{% include 'shappify-bdl-load-bundle' %}
+{% assign bundle_loaded = 'true' %}
+{% endunless %}

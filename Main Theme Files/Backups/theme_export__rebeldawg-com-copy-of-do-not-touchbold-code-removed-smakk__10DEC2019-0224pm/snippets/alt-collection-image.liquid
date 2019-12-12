@@ -1,0 +1,23 @@
+{%- case grid_items_per_row -%}
+  {%- when '2' or 2 -%}
+    {%- assign image_size = '500x650' -%}
+  {%- when '3' or 3 -%}
+    {%- assign image_size = '400x550' -%}
+  {%- when '4' or 4 -%}
+    {%- assign image_size = '300x450' -%}
+{%- endcase -%}
+
+
+{%- include 'image-size', sizes: '400,650,850', image:  block.settings.card_image -%}
+{%- assign image_url =  block.settings.card_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.'  | split: '?' | first -%}
+
+{% comment %}
+<div class="product-item__image-wrapper" style="max-width: {{ image_max_width }}">
+  <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: product.featured_image.aspect_ratio }}%">
+{% endcomment %}
+
+       <img class="collection-item--image lazyload image--fade-in"
+            data-sizes="auto"
+            data-widths="[{{ supported_sizes }}]"
+            data-src="{{ image_url }}"
+            alt="{{  block.settings.card_image.alt }}">

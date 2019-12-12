@@ -1,0 +1,88 @@
+<section class="hero is-info is-large slidershow-image">
+  
+   {% for block in section.blocks %}  
+  <div class="hero-body" style=";background-image: url({{block.settings.background | img_url:'1000x' }})">
+    <div class="container">
+      <img src="https://cdn.shopify.com/s/files/1/2471/1044/files/Logo-UPDATE_10-07-17_resave_3_205x.jpg?v=1551974072">
+      <h1 class="title is-size-1">
+       {% if block.settings.title != blank %} {{block.settings.title}} {% else %} Heading title here{% endif %}
+      </h1>
+      <h2 class="subtitle">
+         {% if block.settings.subtitle != blank %} {{block.settings.subtitle}} {% else %} Large subtitle{% endif %}
+        
+      </h2>
+      {% if block.settings.button != blank %}
+      <a href="{{block.settings.button}}" class="hero__btn">{{block.settings.buttontxt}}</a>
+      {% else %}
+      <a href="#" class="hero__btn">{{block.settings.buttontxt}} </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  
+</section>
+
+<style>
+  .slick-dots {
+  display:none!important;
+  }
+  
+  .hero-body {
+  background-size:100%
+  }
+  
+  @media (max-width:796px) {
+   .hero-body {
+  background-size:100% 100%;
+  }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Landing Page -- Hero",
+	"max_blocks": 3,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Slider",
+      "settings": [
+        {
+          "id": "background",
+          "type": "image_picker",
+       		"label": "Slider Image"
+        },
+		{
+          "id": "title",
+          "type": "text",
+          "label": "Heading Title"
+        },
+		{
+          "id": "subtitle",
+          "type": "text",
+          "label": "Sub Title"
+        },
+ 		{
+          "id": "button",
+          "type": "url",
+          "label": "Button Link"
+        },
+        {
+          "id": "buttontxt",
+          "type": "text",
+          "label": "Button text",
+          "default": "Button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

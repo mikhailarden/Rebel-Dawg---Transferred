@@ -1,0 +1,106 @@
+{%- if section.settings.show_announcement -%}
+
+{%- if section.settings.link == blank -%}
+<div class="discount-bar">
+
+    <div class="container" id="promo-banner">
+      <p class="discount-para"><img style="height: 30px;" src="https://cdn.shopify.com/s/files/1/0082/6612/1296/files/present-fill-white-712ea7.png?223"> {{ section.settings.text | escape }}</p>
+   
+    <div>
+      <a href="#" class="discount-links"> Link </a>
+      <a href="#" class="discount-links"> Link </a>
+      <a href="{{section.settings.link}}" class="hero__btn">Save 20%</a>
+      </div>    
+    </div>
+</div>
+{%- endif -%}
+
+{%- endif -%}
+
+<style>
+  
+  .hero__btn {
+  color: black!important
+  }
+  
+  .hero__btn:hover {
+  color:white!important
+  }
+  
+  .discount-links {
+  margin: 0px 10px;
+    color:white;
+  }
+
+  #shopify-section-announcement, #shopify-section-newsletter1, #shopify-section-header {
+    display:none!important;
+  }
+  
+  #promo-banner{
+      display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .discount-para{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+  }
+  
+  .discount-para{
+  color: white;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  
+  .discount-para img {
+  margin-right:10px;
+  }
+
+  .discount-bar {
+    position: absolute;
+    z-index: 9999;
+    top: 0px;
+    background: #ff00b1;
+    width: 100%;
+  } 
+  
+  @media (max-width:786px) {
+  .discount-para{
+    width: 100%;
+  }
+    
+    .discount-bar {
+    position:relative;
+    }
+  }
+
+</style>
+
+{% schema %}
+{
+  "name": "Promo bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "Announce something here"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Discount/Coupon link"
+    }
+  ]
+}
+{% endschema %}

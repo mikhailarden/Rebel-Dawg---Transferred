@@ -1,0 +1,294 @@
+<!DOCTYPE html> 
+<!--[if IE 9 ]><html class="no-js csscalc no-flexbox ie9" lang="{{ shop.locale }}"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html class="no-js" lang="{{ shop.locale }}"><!--<![endif]-->
+  <head>   
+    <meta name="google-site-verification" content="Lt_-Pft6kTulI7Lra5GxFcS3R2P8gUb13WkSy1ry0vQ" />
+<meta name="p:domain_verify" content="65a2217c848ccad7084ae8cc41ec9f53"/>    
+     <meta name="google-site-verification" content="Lt_-Pft6kTulI7Lra5GxFcS3R2P8gUb13WkSy1ry0vQ" />
+<meta name="google-site-verification" content="XQfZLGDTcGBLCImbFhfXPXM8OVxHPrldGDkL19DXgPA" />
+
+    <!-- BEGIN GCR Badge Code -->
+<script src="https://apis.google.com/js/platform.js?onload=renderBadge"
+  async defer>
+</script>
+
+    {% comment %}
+<script>
+  window.renderBadge = function() {
+    var ratingBadgeContainer = document.createElement("div");
+      document.body.appendChild(ratingBadgeContainer);
+      window.gapi.load('ratingbadge', function() {
+        window.gapi.ratingbadge.render(
+          ratingBadgeContainer, {
+            // REQUIRED
+            "merchant_id": 127897510,
+            // OPTIONAL
+            "position": "BOTTOM_RIGHT"
+          });           
+     });
+  }
+</script>
+    {% endcomment %}
+<!-- END GCR Badge Code -->
+        
+      <style>
+          body {
+            opacity: 1;
+            transition: 1s opacity;
+        }
+        body.fade-out {
+            opacity: 0;
+            transition: none;
+        }
+      </style>
+      
+	{% comment %}Redirecting dummy products{% endcomment %}
+    {% if product.template_suffix == "nav" %}
+      <meta http-equiv="refresh" content="0; url=https://rebeldawg.com">
+      <script language="javascript">
+        window.location.href = "https://rebeldawg.com"
+      </script>
+    {% endif %}
+    
+    <script>
+      {% if customer.tags.size > 0 %}
+      window.upsell_customer_tags = "{{customer.tags |join: ','}}";
+      {% endif %}
+    </script>
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="theme-color" content="{{ settings.accent_color }}">
+	
+    <title>
+      {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- comment -%} We preconnect of two popular domains (Shopify CDN and Google Font) to speed up performance {%- endcomment -%}
+    
+    <link rel="preconnect" href="https://v.shopify.com" crossorigin>
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://use.typekit.com">
+<link rel="preconnect" href="https://use.fontawesome.com">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href='https://use.typekit.net/oll1ffh.css' type="text/css" media="none" onload="this.media='all';">
+   
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+
+    {%- include 'social-meta-tags' -%}
+    {%- include 'google-fonts' -%}
+
+    {{ content_for_header }}
+
+
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+
+
+    <script src="{{ 'theme_common.js' | asset_url }}" async></script>
+
+    <script>
+      // This allows to expose several variables to the global scope, to be used in scripts
+      window.theme = {
+        template: {{ template | json }},
+        currentPage: {{ current_page }},
+        shopCurrency: {{ shop.currency | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        moneyWithCurrencyFormat: {{ shop.money_with_currency_format | json }},
+        collectionSortBy: {{ collection.sort_by | default: collection.default_sort_by | json }},
+        locale: {{ shop.locale | json }}
+      };
+
+      window.languages = {
+        productLabelsOnSale: {{ 'product.labels.on_sale' | t | json }},
+        productFormAddToCart: {% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t | json }}{% else %}{{ 'product.form.add_to_cart' | t | json }}{% endif %},
+        productFormSoldOut: {{ 'product.form.sold_out' | t | json }},
+        productFormUnavailable: {{ 'product.form.unavailable' | t | json }},
+        cartEstimatedShipping: {{ 'cart.general.estimated_shipping' | t | json }},
+        shippingEstimatorSubmit: {{ 'cart.shipping_estimator.submit' | t | json }},
+        shippingEstimatorSubmitting: {{ 'cart.shipping_estimator.submitting' | t | json }},
+        recoverPasswordTitle: {{ 'customer.recover_password.title' | t | json }},
+        cartDeleteTitle: {{ 'cart.items.delete' | t | json }}
+      }
+    </script>
+
+    
+
+    {%- include 'microdata-schema' -%}
+
+    {%- if template.name == 'product' -%}
+      {%- comment -%}This is used on product pages to power the "features" section
+      {{ '//use.fontawesome.com/d822a9b4f8.js' | script_tag }}
+      {%- endcomment -%}
+    {%- endif -%}
+  {% section 'filter-menu-settings' %}
+<style>@import url(//fonts.googleapis.com/css?family=Abril+Fatface|Allerta|Amaranth|Anton|Arvo|Berkshire+Swash|Bitter|Caveat|Ceviche+One|Chewy|Comfortaa|Crimson+Text|Domine|Dosis|Frijole|Heebo|Josefin+Slab|Kaushan+Script|Knewave|Lato|Libre+Baskerville|Lobster|Montserrat|Noto+Serif|Old+Standard+TT|Oleo+Script|Open+Sans|Oswald|PT+Sans|Pacifico|Passion+One|Permanent+Marker|Playfair+Display|Poly|Poppins|Quicksand|Radley|Raleway|Righteous|Roboto|Rubik|Shrikhand|Titillium+Web|Ubuntu|Vollkorn|Work+Sans);</style>
+
+    
+ {% if template contains 'product' %}
+   {% comment %}
+    Applies the Product Customizer Stylesheet
+    {% endcomment %}
+    
+    <style>
+      @font-face{font-family:seventies;src:url("{{ 'Seventies.ttf' | asset_url }}")}
+          @font-face{font-family:Rosewood Std;src:url("{{ 'RosewoodStd-Regular.otf' | asset_url }}")}
+      .retro-font{font-family:seventies!important}
+      .outlaw-font{font-family:Rosewood Std!important;}
+    .form-options-1>#tag-group-buttons>label{flex-grow:0!important;flex-shrink:0!important;flex-basis:0!important;text-align:center;min-height:53px;min-width:129px}.form-options-0>#tag-group-buttons label{min-width:129px;flex-grow:0!important;flex-shrink:0!important;flex-basis:0!important;text-align:center;min-height:40px;font-size:18px!important}.disabled-clicked{background-color:red;border:3px solid #000!important}.disabled-cart{pointer-events:none;cursor:not-allowed;opacity:.65;filter:alpha(opacity=65);-webkit-box-shadow:none;box-shadow:none}#tag-group-lines>label{font-family:Playfair Display!important}label[for=Heart]{background-size:180%!important}#line-1-front-side,.retro-font,.gothic-font,.script-font{text-transform:capitalize}@font-face{font-family:birrdsofparadise;src:url("{{ 'birrdsofparadise.ttf' | asset_url }}")}@font-face{font-family:builttilingsemi;src:url("{{ 'builttilingsemi.ttf' | asset_url }}")}@font-face{font-family:oldlondon;src:url("{{ 'oldlondon2.otf' | asset_url }}")}.script-font{font-family:birrdsofparadise!important}.block-font{font-family:builttilingsemi!important}.gothic-font{font-family:oldlondon!important}#tag-group-buttons>label,#tag-group-lines>label,.stepnumber1{font-family:acumin-pro-extra-condensed}.form-options-3>#tag-group-buttons>label{height:55px!important;min-width:30%;width:30%}.form-options-3>#tag-group-buttons>label>img{width:100%;height:100%}@media (max-width:990px){.product-custom-form.active{padding:0!important}.form-options-0>#tag-group-buttons label{padding:8px 20px!important;font-size:16px!important;text-align:center}.form-options-3>#tag-group-buttons>label{width:40%!important}}.initalize-button{margin:0 auto 35px;background:#ff00b1;color:#fff;width:100%!important;display:block}.product-custom-form{display:none}.product-custom-form.active{display:block!important;padding:0;transition:.6s}#tag-group-buttons label,#tag-group-swatches label{padding:8px 20px;font-size:15px;border:2.5px solid #000;font-weight:700}#tag-group-buttons,#tag-group-swatches{display:flex;flex-wrap:wrap;list-style-type:none;margin:25px 0 0;padding:0}#tag-group-buttons li,#tag-group-swatches li{float:left;margin:0 5px 0 0;width:100px;height:40px;position:relative}#tag-group-buttons label,#tag-group-swatches label,.perfected-circle{cursor:pointer;margin-right:1em;margin-bottom:1em}#tag-group-buttons input,#tag-group-buttons label{display:block;top:0;left:0;right:0;bottom:0}#tag-group-buttons input[type=radio],#tag-group-swatches input[type=radio]{opacity:.011;display:none}#tag-group-buttons .letter-style-buttons input[type=radio]:checked+label,#tag-group-buttons input[type=radio]:checked+label,#tag-group-buttons label:hover,#tag-group-swatches input[type=radio]:checked+label,#tag-group-swatches label:hover{background-color:#000;color:#fff;transition:.6s}#tag-group-buttons label{text-align:center}#tag-group-swatches input,#tag-group-swatches label{display:block}#tag-group-lines>*{display:block;width:100%}.not-ready{background-color:#eee!important}.perfected-circle{padding:13px!important;border:1px solid #000!important;border-radius:100%;height:48px;width:48px;display:flex!important;justify-content:center;align-items:center}#tag-group-swatches input[type=radio]:checked+label{box-shadow:inset 0 0 0 2px #fff;border:2px solid #000!important}.no-padding>label{padding:0!important}.no-padding>label:hover{background-color:transparent!important}.no-padding input[type=radio]:checked+label{border-bottom:3px #ff00b1 solid!important;background-color:transparent!important}#tag-group-buttons>label,#tag-group-lines>label,.form-blocks h3{font-weight:700;color:#000;font-size:14px;text-transform:uppercase;letter-spacing:2px}#tag-group-lines>label{margin-top:30px}#tag-group-lines>input{background-color:transparent;border:none;border-bottom:2px solid #000;border-top:0;margin-top:20px;width:50%;font-size:30px;color:#000}.stepnumber1{text-transform:uppercase;font-size:1.109rem;letter-spacing:1px;color:#000;margin-bottom:10px;width:100%}#tag-group-swatches input[type=radio]:checked~label>.icon{display:block}#tag-group-swatches input[type=radio]~label>.icon{display:none}
+    </style>
+   {% endif %}
+    
+    
+    <!---
+   <script src="{{ 'lazysizes.min.js' | asset_url }}" async></script>
+ --->
+  <script type='text/javascript'>var jiltStorefrontParams = {{ shop.metafields.jilt_storefront | json }}; {% if customer %}jiltStorefrontParams.customerID = {{ customer.id }};{% endif %}</script>
+
+</head>
+{%- assign template_handle = template | replace: '.', ' ' | truncatewords: 1, '' | handle | replace: '_', '-' -%}
+
+  <body class="trademark--v2 template-{{ template_handle }} {% if page.template_suffix != blank %}template-{{ template_handle }}-{{page.template_suffix}}{% endif %}">
+      <script>document.body.className += ' fade-out';</script>
+    {%- include 'svg-icons' -%}
+
+    {%- section 'popup' -%}
+
+    <div class="page__overlay"></div>
+
+    <div class="page__container {% if force_secondary_background %}page__container--secondary{% endif %}">
+      {%- section 'announcement' -%}
+
+      {%- section 'header' -%}
+
+      <main id="main" class="main" role="main">
+        {{ content_for_layout }}
+      </main>
+
+      {%- section 'newsletter' -%}
+      {%- section 'footer' -%}
+    </div>
+
+    {%- if settings.currency_conversion_enabled -%}
+      <script src="//cdn.shopify.com/s/javascripts/currencies.js"></script>
+    {%- endif -%}
+
+    {%- if template.directory == 'customers' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}"></script>
+    {%- endif -%}
+
+    {%- if template.name == 'cart' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+    {%- endif -%}
+
+    <script src="{{ 'libs.js' | asset_url }}"></script>
+    <script src="{{ 'script.js' | asset_url }}" defer></script>
+  <script type="text/javascript" charset="utf-8" async>
+    var shappify_customer_tags = {{ customer.tags | json }}
+  </script>
+    {% comment %}  Don't move sheet {% endcomment %}
+          {{ 'rebel-dawg.scss.css' | asset_url | stylesheet_tag }}
+
+<script type="text/javascript">(function(d, t){ if(window.location.hash!='#gleam'&&(''+document.cookie).match(/(^|;)\s*Gleam9IJgo=X($|;)/)){return;} var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://widget.gleamjs.io/9IJgo/ol.js"; s.parentNode.insertBefore(g, s); }(document, "script"));</script>
+
+  <script>
+         $(function() {
+    $('body').removeClass('fade-out');
+});
+      </script>
+ {% include 'smile-initializer' %}
+
+    
+ 
+<script type="text/javascript">
+  jQuery('.product__form').each(function() {
+		var holder = jQuery(this),
+			submitButton = holder.find('.product__add-to-cart'),
+			submitButtonText = submitButton.text();
+			submitAlertText = 'Whoops! You need to choose all options';
+			radioButton = '[type=radio]';
+			nameInput = holder.find('#line-1-front-side');
+		
+		
+		validateForm();
+		jQuery(radioButton).change(function(){
+			validateForm();
+			
+			setTimeout(function(){
+				validateForm();
+			}, 100)
+			
+		})
+		nameInput.on('keydown keyup', function(){
+			validateForm();
+		})
+		
+		function validateForm(){
+			
+			var names = []
+			jQuery(radioButton).each(function () {
+				var rname = $(this).attr('name');
+				if (jQuery.inArray(rname, names) == -1) names.push(rname);
+			});
+			var radioError = false;
+			$.each(names, function (i, name) {
+				if (jQuery('input[name="' + name + '"]:checked').length == 0) {
+					radioError = true;
+				}
+			});
+			
+			var emptyInput = false;
+			nameInput.each(function() {
+				if ($(this).val().length == 0) {
+					emptyInput = true;
+				}
+			});
+			
+			//check for error
+			if(radioError || emptyInput) {
+				submitButton.text(submitAlertText).css({
+					'pointer-events': 'none',
+					'opacity': '0.8'
+				});
+			} else {
+				submitButton.text(submitButtonText).css({
+					'pointer-events': 'inherit',
+					'opacity': '1'
+				});
+			}
+		}
+	});
+</script> 
+
+
+
+{% include 'swymSnippet' %}
+
+{% include 'uploadkit' %} 
+   <script type="text/javascript">(function(d, t){
+if(window.location.hash!='#gleam'&&(''+document.cookie).match(/(^|;)\s*Gleam9IJgo=X($|;)/)){return;}
+
+var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+g.src = "https://widget.gleamjs.io/9IJgo/ol.js"; s.parentNode.insertBefore(g, s);
+}(document, "script"));</script> 
+</body>
+</html>

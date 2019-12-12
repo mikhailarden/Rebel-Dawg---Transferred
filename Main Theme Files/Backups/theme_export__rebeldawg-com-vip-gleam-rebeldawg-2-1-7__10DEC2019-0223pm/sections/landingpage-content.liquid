@@ -1,0 +1,113 @@
+<div class="container" style="padding-top:20px;padding-bottom:20px;">
+<div class="columns">
+  <div class="column">
+    <h1 style="text-align:center;" class="title is-size-1">At RebelDawg we guarantee</h1>
+    
+    <div class="guanrantee-blocks">
+  
+  <div class="guarantee-row columns">
+  {% for block in section.blocks %}
+  
+  <div class="guranatee-block column">
+  <img src="https://cdn.shopify.com/s/files/1/2471/1044/files/unnamed-4_125x125.png">
+  <h3 class="product-features__title h3 feature__title text--uppercase">{{block.settings.text}}</h3>
+  <p class="product-features__content text--respect-break">{{block.settings.textarea}}</p>
+  </div>
+  {% endfor %}
+  </div>
+    
+    
+</div>
+  </div>
+  <div class="column" style="justify-content:center;align-items:center;display:flex;">
+   <div class="container" style="padding-top:20px;padding-bottom:20px;">
+     <img src="{% if section.settings.image != blank %} {{section.settings.image | img_url:'master'}}{% else %} https://cdn.akc.org/content/hero/puppy-boundaries_header.jpg {% endif %}" >
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+<style>
+  
+  .input-group__submit.button {
+  height:100%;
+  }
+  
+  .guarantee-row {
+  display:flex;
+    width:100%;
+    margin:auto;
+    flex-wrap:wrap;
+  }
+  
+  .guranatee-block {
+    flex-basis:auto!important;
+    width:50%;
+  display:flex; 
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Landing Page - Gurantee",
+	"max_blocks": 6,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Side Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Add Button",
+      "settings": [
+        {
+          "id": "text",
+          "type": "text",
+          "label": "Block Text",
+          "default": "THE LUXE GUARANTEE"
+        },
+{
+          "id": "textarea",
+          "type": "textarea",
+          "label": "Block Text",
+          "default": "Made from the highest quality hand-poured acrylic, our dog tags are lightweight, jingle free, and full of pawesome style!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Call to Action Blocks",
+      "category": "CTA button",
+      "blocks": [
+        { 
+          "type": "select"
+        },
+        {
+          "type": "select"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

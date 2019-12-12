@@ -1,0 +1,175 @@
+{%- if section.settings.image -%}
+  {%- assign overlay_color = section.settings.overlay_color | hex_to_rgba: 0.6 -%}
+{%- else -%}
+  {%- assign overlay_color = section.settings.overlay_color -%}
+{%- endif -%}
+
+<section class="section section-{{ section.id }} promotion" style="background: {{ section.settings.overlay_color }}">
+  {% if section.settings.image %}
+    <div class="promotion__background-image lazyload image--fade-in" data-bgset="{{ section.settings.image | img_url: '600x' }} 600w, {{ section.settings.image | img_url: '800x' }} 800w, {{ section.settings.image | img_url: '1200x' }} 1200w"></div>
+  {% endif %}
+
+  <div class="promotion__overlay" style="background-color: {{ overlay_color }}"></div>
+
+  <div class="container rd-card {% if section.settings.color_background %} rd-color-background {% endif %}">
+    {%- if section.settings.title != blank -%}
+      <h1 class="promotion__title h1" style="color: {{ section.settings.text_color }}">{{ section.settings.title | escape }}</h3>
+    {%- endif -%}
+
+    {%- if section.settings.content != blank -%}
+      <p class="promotion__text h5" style="color: {{ section.settings.text_color }}">{{ section.settings.content | escape | newline_to_br }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+
+<style>
+.rd-color-background {
+  position: relative;
+  padding: 30px 0;
+  background-color: {%- if section.settings.color_background -%}{{ section.settings.card_background_color}}{%- endif -%};
+  opacity: {{ section.settings.card_background_opacity }}
+}
+
+.rd-card {
+  width: {{section.settings.text_background_width}};
+}
+
+
+  </style>
+
+{% schema %}
+{
+  "name": "Promotion",
+  "class": "shopify-section__promotion",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "1200 x 400px .jpg recommended"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+      {
+     "type":      "checkbox",
+     "id":        "color_background",
+     "label":     "Gives background color to text",
+     "default":   true,
+     "info":      "Click this if you want a background in your text"
+  },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+      {
+     "type":      "select",
+     "id":        "card_background_opacity",
+     "label":     "Add Opacity To Background Color",
+     "options": [
+       {
+         "value": "1",
+         "label": "No Opacity"
+       },
+       {
+         "value": ".9",
+         "label": "Very Faint Opacity"
+       },
+       {
+         "value": ".8",
+         "label": "Light Opacity"
+       },
+       {
+         "value": ".7",
+         "label": "Medium Opacity"
+       },
+       {
+         "value": ".6",
+         "label": "Large Opacity"
+       }
+
+     ],
+     "default":   "1",
+     "info":      "Opacity for background color if enabled"
+  },
+      {
+     "type":      "select",
+     "id":        "text_background_width",
+     "label":     "Text Background Width",
+     "options": [
+       {
+         "value": "50%",
+         "label": "50%"
+       },
+       {
+         "value": "60%",
+         "label": "60%"
+       },
+       {
+         "value": "65%",
+         "label": "65%"
+       },
+       {
+         "value": "70%",
+         "label": "70%"
+       },
+       {
+         "value": "75%",
+         "label": "75%"
+       },
+       {
+         "value": "80%",
+         "label": "80%"
+       },
+       {
+         "value": "85%",
+         "label": "85%"
+       },
+       {
+         "value": "90%",
+         "label": "90%"
+       },
+       {
+         "value": "95%",
+         "label": "95%"
+       },
+       {
+         "value": "100%",
+         "label": "100%"
+       }
+     ],
+     "default":   "60%",
+     "info":      "Choose width"
+  },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Text",
+      "default": "Use a short, catchy sentence to showcase your store."
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Rebel Banner Image with text"
+    }
+  ]
+}
+{% endschema %}

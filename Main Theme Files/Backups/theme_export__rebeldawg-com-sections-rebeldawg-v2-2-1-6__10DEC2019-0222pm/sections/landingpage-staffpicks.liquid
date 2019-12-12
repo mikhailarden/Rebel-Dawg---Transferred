@@ -1,0 +1,107 @@
+<div class="container">
+  <ul class="tabs">
+    {% for block in section.blocks %}
+    <li class="title is-size-5 tab-link {% if forloop.first %}current{% endif %}" data-tab="tab-{{forloop.index}}">{{block.settings.title}}</li>
+    {% endfor %} 
+  </ul>
+
+  {% for block in section.blocks %}
+  <div id="tab-{{forloop.index}}" class="tab-content {% if forloop.first %} current {% endif %}">
+
+    <div class="container">
+      {%- for product in collections[block.settings.collection].products limit: 8 -%}
+      <div class="grid__cell 1/2 1/{{ grid_items_per_row }}--desk">
+        {%- include 'product-item', product: product, grid_items_per_row: grid_items_per_row, image_dimension: section.settings.image_dimension, show_color_swatch: section.settings.show_color_swatch -%}
+      </div>
+      {%- endfor -%}
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-bottom: 40px;">
+      <a style="text-align:center;" href="/collections/all" class="hero__btn">Shop Collection</a>
+    </div>
+  </div>
+  {% endfor %} 
+
+</div>
+
+<style>
+  @media (min-width:799px) {
+  .grid__cell {
+    width:25%!important;
+    margin-bottom:20px;
+  }
+  }
+
+
+  ul.tabs{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    display:flex;
+    justify-content:center;
+  }
+  ul.tabs li{
+    background: none;
+    color: #222;
+    display: inline-block;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  ul.tabs li.current{
+    text-decoration:underline;
+    color: #222;
+  }
+
+  .tab-content{
+    display: none;
+    background: transparent;
+    padding: 15px;
+  }
+
+  .tab-content.current{
+    display: inherit;
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Landing Page - Picks",
+	"max_blocks": 4,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Side Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Collection",
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Collection Title",
+          "default": "Staff Picks"
+        },
+		{
+          "id": "collection",
+          "type": "collection",
+          "label": "Collection"
+		}
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

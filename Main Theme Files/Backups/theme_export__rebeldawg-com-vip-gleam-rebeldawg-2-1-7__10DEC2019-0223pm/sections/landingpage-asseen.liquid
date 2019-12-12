@@ -1,0 +1,60 @@
+<div style="background:#ff00b1;padding:10px;">
+
+<div class="as-seen-in columns">
+
+  
+  {% for block in section.blocks %}
+  <div class="column" id="logolist">
+  <img src="{% if block.settings.image != blank %} {{block.settings.image | img_url:'master'}} {%else %} https://amcham.com.tw/wp-content/uploads/2018/04/Forbes-Black-Logo-PNG-e1526884925861.png {% endif %}">
+  </div>
+  {% endfor %}
+  
+</div>
+</div>
+
+<style>
+  #logolist img {
+  width:65%;
+  }
+  
+  #logolist {
+  align-items: center;
+justify-content: center;
+display: flex;
+  }
+  
+  .as-seen-in {
+  max-width:80%;
+    margin:auto;
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Landing Page - Logos",
+	"max_blocks": 6,
+  "settings": [
+    {
+       "id": "text",
+          "type": "text",
+          "label": "Section text",
+          "default": "As Seen In"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Add Button",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Logo Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

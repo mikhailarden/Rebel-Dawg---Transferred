@@ -1,0 +1,78 @@
+{%- assign force_secondary_background = true -%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+
+  $(function() {
+    console.log( "ready!" );
+
+    $('.slidershow-image').slick({
+      dots: true,
+      infinite: true,
+      speed: 500,
+      autoplay: true,
+      autoplaySpeed: 5000,
+      fade: true,
+      cssEase: 'linear'
+    });
+    
+    $(document).ready(function(){
+	
+	$('ul.tabs li').click(function(){
+		var tab_id = $(this).attr('data-tab');
+
+		$('ul.tabs li').removeClass('current');
+		$('.tab-content').removeClass('current');
+
+		$(this).addClass('current');
+		$("#"+tab_id).addClass('current');
+	})
+
+})
+
+  });
+
+</script>
+
+
+<style> 
+  @media (max-width:796px) {
+    
+    .grid__cell {
+    width:100%!important;
+    }
+    .as-seen-in {
+      display:flex!important;
+      flex-direction:row!important;
+    }
+
+    #logolist img {
+      width:100%!important;
+    }
+
+
+    #promo-banner{
+      display: flex;
+      flex-direction: column;
+    }
+
+    #promo-banner div {
+      margin-top:20px;
+      margin-bottom:40px;
+    }
+
+  }
+
+</style>
+
+{% section 'landingpage-promo-banner' %}
+
+{% section 'landingpage-section' %}
+
+{% section 'landingpage-asseen' %}
+
+{% section 'landingpage-content' %}
+{% section 'landingpage-staffpicks' %}
+
+<script src="//foursixty.com/media/scripts/fs.embed.v2.5.js" data-feed-id="rebeldawg-com_1" data-theme="showcase_v2_5" data-page-size="10"></script><style>.fs-has-links::after {  padding:  5px 7.5px; border: 1px solid #fff; color:#fff; content: "SHOP IT";  }.fs-has-links:hover:after { background-color: #fff; color: rgba(0,0,0,0.8)}.fs-desktop .fs-entry-container { width: 20% !important; padding-top: 20% !important; }.fs-mobile .fs-entry-container { width: 50% !important; padding-top: 50% !important; }.fs-wrapper div.fs-text-container .fs-entry-title, div.fs-detail-title{font-family:Times New Roman, serif;font-style:normal;font-weight:normal;}div.fs-text-container .fs-entry-date, div.fs-detail-container .fs-post-info, div.fs-wrapper div.fs-has-links::after, .fs-text-product, .fs-overlink-text{font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-style:normal;font-weight:bold;}.fs-wrapper div.fs-text-container * {color:#fff}.fs-wrapper div.fs-text-container {background-color:rgba(0,0,0,0.8); margin: 0px}div.fs-entry-date{display:none}.fs-wrapper div.fs-timeline-entry{ margin: 0px }</style>

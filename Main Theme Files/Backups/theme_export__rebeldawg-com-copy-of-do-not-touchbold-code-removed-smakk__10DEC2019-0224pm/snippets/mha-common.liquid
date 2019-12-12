@@ -1,0 +1,80 @@
+<script type="text/javascript">
+      if (typeof window.masterapp_config != "object") {
+        window.masterapp_config = {}
+      }
+      
+      {% assign masterapp_page_type = '' %}
+      window.masterapp = {
+        shop_slug: "{{shop.permanent_domain | remove: '.myshopify.com' }}",
+        store_id: "{{shop.permanent_domain}}",
+        money_format: "{{shop.money_format | replace: '"', "'"}}",
+        customer: null,
+        cart: null,
+      }
+
+      {% if customer %}
+      window.masterapp.customer = {
+        id: {{customer.id}},
+        email: "{{customer.email}}",
+        tags: {{customer.tags | json}},
+        first_name: "{{customer.first_name}}",
+        last_name: "{{customer.last_name}}",
+      };
+      {% endif %}
+
+      {% if template contains 'collection' %}
+      {% unless collection.id == blank %}
+        {% assign masterapp_page_type = 'collection' %}
+        window.masterapp.collection = {
+          id: {{collection.id}}
+        }
+      {% endunless %}
+      {% endif %}
+
+      {% if template contains 'product' %}
+      {% unless product.id == blank %}
+        {% assign masterapp_page_type = 'product' %}
+        window.masterapp.product = {
+          id: {{product.id}},
+          price: {{product.price}},
+          tags: {{product.tags | json}},
+          variants: {{product.variants | json}}
+        };
+        window.masterapp.product_collections = []
+        {% for c in product.collections %}
+        window.masterapp.product_collections.push({{c.id}})
+        {% endfor %}
+      {% endunless %}
+      {% endif %}
+        
+      {% if template contains 'cart' %}
+      {% assign masterapp_page_type = 'cart' %}
+      {% endif %}
+
+      {% if cart %}
+        window.masterapp.cart = {{cart | json}}
+        delete window.masterapp.cart.note
+        window.masterapp.cart_collections = {}
+        {% for item in cart.items %}
+          window.masterapp.cart_collections["v{{item.variant_id}}"] = []
+            {% for c in item.product.collections %}
+            window.masterapp.cart_collections["v{{item.variant_id}}"].push({{c.id}})
+            {% endfor %}
+        {% endfor %}
+      if (typeof window.masterapp.cart.items == "object") {
+          for (var i=0; i<window.masterapp.cart.items.length; i++) {
+              ["sku", "grams", "vendor", "url", "image", "handle", "requires_shipping", "product_type", "product_description"].map(function(a) {
+                  delete window.masterapp.cart.items[i][a]
+              })
+          }
+        }
+      {% endif %}
+
+      window.masterapp.page_type = "{{masterapp_page_type}}"
+      window.masterapp.partner_url = "https://master-marketer.hulkapps.com";
+    </script>
+    <div id="mhaDaoBar"></div>
+    <div id="mhaOanPopup"></div>
+    <div id="mhaRnProduct"></div>
+    <link rel="stylesheet" type="text/css" href="https://master-marketer.hulkapps.com/assets/mha-dao-bar.css">
+    <link rel="stylesheet" type="text/css" href="https://master-marketer.hulkapps.com/assets/mha-oan-popup.css">

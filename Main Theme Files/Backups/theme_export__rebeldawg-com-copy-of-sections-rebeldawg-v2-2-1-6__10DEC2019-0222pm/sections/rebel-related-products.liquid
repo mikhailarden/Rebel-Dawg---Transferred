@@ -1,0 +1,183 @@
+{%- if section.settings.show_related_products -%}
+{%- comment -%}
+If we are in the context of a collection, we use other products from the same collection. Otherwise we fallback to the first collection attached
+to the product and, if none is found, the "all" collections
+{%- endcomment -%}
+
+{%- comment -%}
+{%- unless collection -%}
+{%- assign collection = product.collections.first | default: collections.all -%}
+{%- endunless -%}
+{%- endcomment -%}
+
+<aside class="related-products">
+  <div class="section">
+    <div class="container">
+      {%- assign products_count = collection.all.products.size -%}
+
+      <h2 class="section__title h3">{{ 'product.general.related_products' | t }}</h2>
+      <div class="product__slider">
+        <div class="list-products grid grid--large grid--center" data-slides-count="8">
+
+          {% assign relatedTags = '' %}
+          {% for tag in product.tags %}
+          {% assign relatedTags = relatedTags | append:tag | downcase %}
+          {% unless forloop.last %}{% assign relatedTags = relatedTags | append:',' %}{% endunless %}
+          {% endfor %}
+          {% assign newSkus = '' %}
+
+
+          {% if relatedTags contains 'related' %}
+          {% for tag in product.tags %}
+          {% if tag contains "related" %}
+          {% assign newSkus = newSkus | append:tag | remove: 'related:' | downcase %}
+          {% unless forloop.last %}{% assign newSkus = newSkus | append:', ' %}{% endunless %}
+          {% endif %}
+          {% endfor %}
+
+
+          {% paginate collections.all.products by 500 %}
+          {% for product in collections.all.products   %}
+          {% unless product.tags contains 'hide' %}
+          {%  if product.price > 0 %}
+          {% assign skudowncase = product.first_available_variant.sku | downcase %}
+          {% if newSkus contains skudowncase and skudowncase != '' %}
+          <div class="grid__cell 1/2--handheld-and-up 1/3 --desk"  data-slide-index="{{ forloop.index0 }}">
+            {%- include 'product-item', product: product, image_dimension: section.settings.related_products_image_dimension, show_color_swatch: section.settings.show_related_products_color_swatch -%}
+          </div>
+          {% endif %}      
+          {% endif %}
+          {% endunless %}
+          {%- endfor -%}
+          {% endpaginate %}
+
+          {% else %}
+
+          {% if newSkus == '' %}
+          {% assign relatedCollection = collections['all'] %}
+          {% assign index = 'now' | date: '%S' %}
+          {% assign overallProductCount =  collections.all.products_count %}
+          {%- assign random_factor = overallProductCount | minus: 12 | abs -%}
+          {% assign index = index | times: random_factor %}
+          {% assign index = index | divided_by: 60 %}
+
+          {% paginate collections.all.products by 500 %}
+          {% for product in relatedCollection.products offset: index limit:15   %}
+          {% unless product.tags contains 'hide' %}
+          {%  if product.price > 0 %}
+          {% assign skudowncase = product.first_available_variant.sku | downcase %}
+
+          <div class="grid__cell 1/2--handheld-and-up 1/3 --desk"  data-slide-index="{{index}}">
+            {%- include 'product-item', product: product, image_dimension: section.settings.related_products_image_dimension, show_color_swatch: section.settings.show_related_products_color_swatch -%}
+          </div>
+
+          {% endif %}
+          {% endunless %}
+          {%- endfor -%}
+          {% endpaginate %}
+
+          {% endif %}
+
+
+          {% endif %}
+
+          {% comment %}
+          {%- else -%}
+
+          {% if newSkus == '' %}
+          <h2 > sup </h2>
+          {% paginate collections.all.products by 500 %}
+          {% for product in collections.all.products   %}
+          {%  if product.price > 0 %}
+
+          {{ product.title }}
+          {%- assign products_count = collection.all_products_count -%}
+
+          <h1> count : {{products_count }}</h1>
+          {% endif %}
+
+          {% endfor %}
+          {% endpaginate %}
+          {% endif %}
+
+          {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+{%- endif -%}
+
+{% comment %}
+{%- for i in (1..section.settings.grid_items_count) -%}
+<div class="grid__cell 1/2--handheld-and-up 1/3--desk" data-slide-index="{{ forloop.index0 }}">
+  <div class="product-item">
+    <figure class="product-item__image-container">
+      <a href="#" class="product-item__link">
+        {%- capture current -%}{%- cycle 1, 2, 3, 4, 5, 6 -%}{%- endcapture -%}
+        {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg product-item__image' }}
+      </a>
+    </figure>
+
+    <div class="product-item__info">
+      {%- if settings.product_show_vendor -%}
+      <h4 class="product-item__vendor text--uppercase">{{ 'home_page.onboarding.brand_title' | t }}</h4>
+      {%- endif -%}
+
+      <h3 class="product-item__title">{{ product.title }}</h3>
+      <span class="product-item__price" data-money-convertible>{{ 1990 | money }}</span>
+    </div>
+  </div>
+</div>
+{%- endfor -%}
+{% endcomment %}
+
+
+
+{% schema %}
+{
+"name": "Rebel Related products",
+"settings": [
+{
+"type": "paragraph",
+"content": "Are you looking for hand-picked related products? You can do it now with our app SuperFields. [Learn more here](http://support.maestrooo.com/article/117-product-choosing-hand-picked-related-products)."
+},
+{
+"type": "checkbox",
+"id": "show_related_products",
+"label": "Show section",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_related_products_color_swatch",
+"label": "Show product available colors",
+"default": true
+},
+{
+"type": "select",
+"id": "related_products_image_dimension",
+"label": "Product image dimension",
+"options": [
+{
+"value": "small",
+"label": "Small"
+},
+{
+"value": "normal",
+"label": "Normal"
+},
+{
+"value": "big",
+"label": "Big"
+},
+{
+"value": "fill_width",
+"label": "Fill width"
+}
+],
+"default": "normal"
+}
+]
+}
+{% endschema %}
