@@ -27,12 +27,16 @@ Rebel Dawg creates customizable, high-quality, and interchangeable pet accessori
 * 'show-all-letters' - Hides all the letter function
 * 'hide-letter' - hides selected letter, 'letter' in this is defined as "A", "B", "C" etc
 
+* 'show-color-NAME' - hides all other colors, and only displays the defined colors. 
+* 'show-charm-NAME' - hides all other charms, and only displays the defined charms. 
+* 'hide-style-NAME' - hides the style name/color based on the value. (a)
+* 'hide-color-NAME' - hides the style name/color based on the value. (b)
+
 * 'hide-small-tag' - hides the small tag button from form
 * 'hide-medium-tag' - hides the medium tag button from form
 * 'hide-large-tag' - hides the large tag button from form
 
-* 'hide-style-NAME' - hides the style name/color based on the value. (a)
-* 'hide-color-NAME' - hides the style name/color based on the value. (b)
+
 
 * 'hide-gothic-text' - hides the gothic font text option
 * 'hide-script-text' - hides the script font text option
